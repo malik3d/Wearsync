@@ -1,0 +1,20 @@
+.page { padding: 32px; max-width: 700px; }
+.header { margin-bottom: 28px; }
+.title { font-family: var(--mono); font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+.subtitle { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px; }
+.fieldGroup { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 20px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.label { font-size: 10px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+.input { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 8px 12px; font-family: var(--mono); font-size: 13px; outline: none; transition: border-color 0.15s; }
+.input:focus { border-color: rgba(255,255,255,0.2); }
+.fmtPicker { display: flex; gap: 4px; }
+.fmtBtn { padding: 8px 16px; border-radius: 7px; font-family: var(--mono); font-size: 12px; font-weight: 700; background: var(--bg3); border: 1px solid var(--border); color: var(--text-dim); transition: all 0.15s; letter-spacing: 0.05em; }
+.fmtBtn:hover { color: var(--text); }
+.fmtActive { background: rgba(0,232,122,0.1); border-color: rgba(0,232,122,0.3); color: var(--green) !important; }
+.exportBtn { display: flex; align-items: center; gap: 8px; background: var(--green); color: #000; font-weight: 700; font-size: 14px; padding: 11px 24px; border-radius: 9px; transition: opacity 0.15s; }
+.exportBtn:hover { opacity: 0.88; }
+.schemaCard { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; }
+.schemaTitle { font-size: 11px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
+.schemaGrid { display: flex; flex-wrap: wrap; gap: 7px; }
+.field2 { font-family: var(--mono); font-size: 11px; background: var(--bg3); border: 1px solid var(--border); border-radius: 5px; padding: 3px 9px; color: var(--text-mid); }

@@ -1,0 +1,110 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    name: Build & Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm ci && npm run build
+
+      - name: Package release ZIP
+        run: |
+          mkdir -p release
+          cp -r backend release/
+          cp -r frontend/dist release/frontend-dist
+          cp docker-compose.yml release/
+          cp .env.example release/
+          cp README.md release/
+          cp CONTRIBUTING.md release/
+          cd release && zip -r ../wearsync-${{ steps.version.outputs.VERSION }}.zip .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: WearSync ${{ steps.version.outputs.VERSION }}
+          body: |
+            ## WearSync ${{ steps.version.outputs.VERSION }}
+
+            ### Installation
+            ```bash
+            # Download and unzip
+            unzip wearsync-${{ steps.version.outputs.VERSION }}.zip
+            cd wearsync
+
+            # Configure
+            cp .env.example .env
+            # Edit .env with your API keys
+
+            # Run
+            docker compose up
+            ```
+
+            ### What's new
+            See [CHANGELOG.md](CHANGELOG.md) for details.
+          files: wearsync-${{ steps.version.outputs.VERSION }}.zip
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.VERSION, '-') }}
+
+  # ── Docker Hub ────────────────────────────────────────────────────────────
+  docker-publish:
+    name: Publish Docker Images
+    runs-on: ubuntu-latest
+    needs: release
+    if: "!contains(github.ref, '-')"  # skip pre-releases
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Extract version
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Push backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/wearsync-backend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/wearsync-backend:${{ steps.version.outputs.VERSION }}
+
+      - name: Push frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/wearsync-frontend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/wearsync-frontend:${{ steps.version.outputs.VERSION }}

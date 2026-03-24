@@ -1,0 +1,96 @@
+.layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px 28px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.logoIcon {
+  font-size: 22px;
+  color: var(--green);
+  line-height: 1;
+}
+
+.logoText {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--text);
+}
+
+.navList {
+  list-style: none;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 12px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.navItem:hover {
+  color: var(--text);
+  background: var(--bg3);
+}
+
+.navItem.active {
+  color: var(--green);
+  background: rgba(0,232,122,0.08);
+}
+
+.navIcon {
+  font-size: 16px;
+  width: 18px;
+  text-align: center;
+  line-height: 1;
+}
+
+.navLabel { letter-spacing: 0.01em; }
+
+.sidebarFooter {
+  padding: 16px 20px 0;
+  border-top: 1px solid var(--border);
+}
+
+.version {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+.main {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--bg);
+}
