@@ -1,6 +1,6 @@
 {
   "name": "wearsync-backend",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "WearSync Backend - Multi-wearable data aggregator",
   "main": "src/index.js",
   "scripts": {
@@ -13,10 +13,10 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.0",
     "express": "^4.18.0",
+    "express-rate-limit": "^7.2.0",
     "jsonwebtoken": "^9.0.0",
     "passport": "^0.7.0",
-    "passport-oauth2": "^1.7.0",
-    "passport-fitbit-oauth2": "^1.2.0"
+    "passport-oauth2": "^1.7.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.0"
