@@ -1,49 +1,45 @@
-const crypto = require('crypto');
+const { getDB }            = require('../models/database');
+const { encrypt, decrypt } = require('./crypto');
 
-const ALGORITHM = 'aes-256-gcm';
-const IV_LENGTH = 16;
-
-function getKey() {
-  const secret = process.env.JWT_SECRET || 'fallback-insecure-key-set-JWT_SECRET';
-  return crypto.createHash('sha256').update(secret).digest();
+function saveTokens(provider, label, accessToken, refreshToken, expiresIn) {
+  const db = getDB();
+  db.prepare(`
+    INSERT INTO devices (provider, label, access_token, refresh_token, token_expires)
+    VALUES (?, ?, ?, ?, ?)
+    ON CONFLICT(provider) DO UPDATE SET
+      access_token=excluded.access_token,
+      refresh_token=excluded.refresh_token,
+      token_expires=excluded.token_expires
+  `).run(
+    provider,
+    label,
+    encrypt(accessToken),
+    refreshToken ? encrypt(refreshToken) : null,
+    Date.now() + (expiresIn || 3600) * 1000
+  );
 }
 
-function encrypt(text) {
-  if (!text) return null;
-  try {
-    const iv       = crypto.randomBytes(IV_LENGTH);
-    const cipher   = crypto.createCipheriv(ALGORITHM, getKey(), iv);
-    const encrypted = Buffer.concat([cipher.update(text, 'utf8'), cipher.final()]);
-    const tag      = cipher.getAuthTag();
-    return [iv.toString('base64'), tag.toString('base64'), encrypted.toString('base64')].join(':');
-  } catch (e) {
-    console.error('Encryption error:', e.message);
-    return text;
-  }
+function getTokens(provider) {
+  const db     = getDB();
+  const device = db.prepare('SELECT * FROM devices WHERE provider=?').get(provider);
+  if (!device) return null;
+  return {
+    ...device,
+    access_token:  decrypt(device.access_token),
+    refresh_token: device.refresh_token ? decrypt(device.refresh_token) : null,
+  };
 }
 
-function decrypt(stored) {
-  if (!stored) return null;
-  if (!stored.includes(':')) return stored;
-  try {
-    const [ivB64, tagB64, dataB64] = stored.split(':');
-    const iv        = Buffer.from(ivB64, 'base64');
-    const tag       = Buffer.from(tagB64, 'base64');
-    const encrypted = Buffer.from(dataB64, 'base64');
-    const decipher  = crypto.createDecipheriv(ALGORITHM, getKey(), iv);
-    decipher.setAuthTag(tag);
-    return decipher.update(encrypted) + decipher.final('utf8');
-  } catch (e) {
-    console.error('Decryption error:', e.message);
-    return stored;
-  }
+function updateLastSync(provider) {
+  const db = getDB();
+  db.prepare("UPDATE devices SET last_sync=datetime('now') WHERE provider=?").run(provider);
 }
 
-module.exports = { encrypt, decrypt };
+module.exports = { saveTokens, getTokens, updateLastSync };
 ```
 
 ---
 
 Commit message:
 ```
-security: fix #3 — encrypt OAuth tokens at rest with AES-256-GCM
+security: fix #3 — encrypted token store for all services
