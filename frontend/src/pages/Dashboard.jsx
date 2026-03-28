@@ -14,6 +14,15 @@ const METRIC_DEFS = [
   { key: 'calories_total',  label: 'Calories',      unit: 'kcal', icon: '◈',  good: () => false,  warn: () => false, fmt: v => v?.toLocaleString() },
   { key: 'active_min',      label: 'Active Min',    unit: 'min',  icon: '▷',  good: v => v >= 30, warn: v => v < 15 },
   { key: 'strain_score',    label: 'Strain',        unit: '',     icon: '⚡', good: v => v >= 10 && v <= 18, warn: v => v > 20 },
+
+  // Withings/body composition
+  { key: 'weight_kg',       label: 'Weight',        unit: 'kg',   icon: '⚖',  good: () => false, warn: () => false, fmt: v => Number(v).toFixed(1) },
+  { key: 'fat_ratio',       label: 'Body Fat',      unit: '%',    icon: '◍',  good: () => false, warn: () => false, fmt: v => Number(v).toFixed(1) },
+  { key: 'hydration_kg',    label: 'Body Water',    unit: 'kg',   icon: '💧', good: () => false, warn: () => false, fmt: v => Number(v).toFixed(1) },
+  { key: 'muscle_mass_kg',  label: 'Muscle Mass',   unit: 'kg',   icon: '▣',  good: () => false, warn: () => false, fmt: v => Number(v).toFixed(1) },
+  { key: 'bone_mass_kg',    label: 'Bone Mass',     unit: 'kg',   icon: '◻',  good: () => false, warn: () => false, fmt: v => Number(v).toFixed(1) },
+  { key: 'systolic_bp',     label: 'Systolic BP',   unit: 'mmHg', icon: '↑',  good: () => false, warn: () => false },
+  { key: 'diastolic_bp',    label: 'Diastolic BP',  unit: 'mmHg', icon: '↓',  good: () => false, warn: () => false },
 ];
 
 function scoreColor(val, def) {
@@ -72,6 +81,8 @@ export default function Dashboard() {
 
   useEffect(() => {
     loadData();
+    const t = setInterval(loadData, 5000); // keep dashboard fresh while background imports run
+    return () => clearInterval(t);
   }, []);
 
   async function loadData() {
@@ -80,8 +91,21 @@ export default function Dashboard() {
         fetch('/api/metrics/today').then(r => r.json()),
         fetch('/api/devices').then(r => r.json()),
       ]);
-      if (!d.length) { setData(generateDemoToday()); setDevices(generateDemoDevices()); setIsDemo(true); }
-      else { setData(d); setDevices(dev); setIsDemo(false); }
+
+      // Disable demo if there is any real imported data in DB (not just today)
+      const anyRealDataResp = await fetch('/api/metrics/range?from=2000-01-01&to=2100-01-01');
+      const anyRealData = anyRealDataResp.ok ? await anyRealDataResp.json() : [];
+      const hasRealData = Array.isArray(anyRealData) && anyRealData.length > 0;
+
+      if (!hasRealData) {
+        setData(generateDemoToday());
+        setDevices(generateDemoDevices());
+        setIsDemo(true);
+      } else {
+        setData(Array.isArray(d) ? d : []);
+        setDevices(Array.isArray(dev) ? dev : []);
+        setIsDemo(false);
+      }
     } catch {
       setData(generateDemoToday());
       setDevices(generateDemoDevices());

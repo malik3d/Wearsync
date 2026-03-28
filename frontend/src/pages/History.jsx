@@ -19,6 +19,16 @@ const METRICS = [
   { key: 'spo2_avg',        label: 'SpO₂',          unit: '%' },
   { key: 'calories_total',  label: 'Calories',      unit: 'kcal' },
   { key: 'active_min',      label: 'Active Minutes', unit: 'min' },
+
+  // Withings/body composition
+  { key: 'weight_kg',       label: 'Weight',        unit: 'kg' },
+  { key: 'fat_ratio',       label: 'Body Fat',      unit: '%' },
+  { key: 'fat_mass_kg',     label: 'Fat Mass',      unit: 'kg' },
+  { key: 'hydration_kg',    label: 'Body Water',    unit: 'kg' },
+  { key: 'muscle_mass_kg',  label: 'Muscle Mass',   unit: 'kg' },
+  { key: 'bone_mass_kg',    label: 'Bone Mass',     unit: 'kg' },
+  { key: 'systolic_bp',     label: 'Systolic BP',   unit: 'mmHg' },
+  { key: 'diastolic_bp',    label: 'Diastolic BP',  unit: 'mmHg' },
 ];
 
 const RANGES = [

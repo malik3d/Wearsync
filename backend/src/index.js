@@ -1,4 +1,6 @@
-require('dotenv').config();
+const path = require('path');
+// In container __dirname is /app/src, so .env is one level up at /app/.env
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const express    = require('express');
 const cors       = require('cors');
 const { initDB } = require('./models/database');
@@ -41,10 +43,3 @@ app.listen(PORT, () => {
   }
   scheduleDailyCron();
 });
-```
-
----
-
-Commit message:
-```
-security: fix #1 — wire up auth and rate limiting middleware
