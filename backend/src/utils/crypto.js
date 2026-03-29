@@ -1,45 +1,45 @@
-const { getDB }            = require('../models/database');
-const { encrypt, decrypt } = require('./crypto');
+const crypto = require('crypto');
 
-function saveTokens(provider, label, accessToken, refreshToken, expiresIn) {
-  const db = getDB();
-  db.prepare(`
-    INSERT INTO devices (provider, label, access_token, refresh_token, token_expires)
-    VALUES (?, ?, ?, ?, ?)
-    ON CONFLICT(provider) DO UPDATE SET
-      access_token=excluded.access_token,
-      refresh_token=excluded.refresh_token,
-      token_expires=excluded.token_expires
-  `).run(
-    provider,
-    label,
-    encrypt(accessToken),
-    refreshToken ? encrypt(refreshToken) : null,
-    Date.now() + (expiresIn || 3600) * 1000
-  );
+const ALGORITHM = 'aes-256-gcm';
+const IV_LENGTH = 16;
+
+function getKey() {
+  const secret = process.env.ENCRYPTION_KEY || process.env.JWT_SECRET || 'default_dev_key';
+  return crypto.createHash('sha256').update(secret).digest();
 }
 
-function getTokens(provider) {
-  const db     = getDB();
-  const device = db.prepare('SELECT * FROM devices WHERE provider=?').get(provider);
-  if (!device) return null;
-  return {
-    ...device,
-    access_token:  decrypt(device.access_token),
-    refresh_token: device.refresh_token ? decrypt(device.refresh_token) : null,
-  };
+function encrypt(plaintext) {
+  if (!plaintext) return null;
+  const key = getKey();
+  const iv = crypto.randomBytes(IV_LENGTH);
+  const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
+  let encrypted = cipher.update(plaintext, 'utf8', 'base64');
+  encrypted += cipher.final('base64');
+  const authTag = cipher.getAuthTag();
+  return `${iv.toString('base64')}:${authTag.toString('base64')}:${encrypted}`;
 }
 
-function updateLastSync(provider) {
-  const db = getDB();
-  db.prepare("UPDATE devices SET last_sync=datetime('now') WHERE provider=?").run(provider);
+function decrypt(encryptedData) {
+  if (!encryptedData) return null;
+  try {
+    const key = getKey();
+    const parts = encryptedData.split(':');
+    if (parts.length !== 3) throw new Error('Invalid format');
+    const iv = Buffer.from(parts[0], 'base64');
+    const authTag = Buffer.from(parts[1], 'base64');
+    const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
+    decipher.setAuthTag(authTag);
+    let decrypted = decipher.update(parts[2], 'base64', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
+  } catch (err) {
+    console.error('Decryption failed:', err.message);
+    return null;
+  }
 }
 
-module.exports = { saveTokens, getTokens, updateLastSync };
-```
+function hash(value) {
+  return crypto.createHash('sha256').update(value).digest('hex');
+}
 
----
-
-Commit message:
-```
-security: fix #3 — encrypted token store for all services
+module.exports = { encrypt, decrypt, hash };

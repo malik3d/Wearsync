@@ -32,7 +32,9 @@ app.use('/export',  requireAuth, exportRoutes);
 app.use('/sync',    requireAuth, syncRoutes);
 app.use('/import',  requireAuth, importRoutes);
 
-app.listen(PORT, () => {
+const { serveStatic } = require('./static');
+serveStatic(app);
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`\n🩺 WearSync Backend running on http://localhost:${PORT}`);
   if (process.env.JWT_SECRET && process.env.JWT_SECRET !== 'change_this_to_a_random_secret_string') {
     console.log(`\n🔑 Your API token:\n   ${generateToken()}\n`);
@@ -41,10 +43,3 @@ app.listen(PORT, () => {
   }
   scheduleDailyCron();
 });
-```
-
----
-
-Commit message:
-```
-security: fix #1 — wire up auth and rate limiting middleware
