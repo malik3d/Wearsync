@@ -1,26 +1,9 @@
-/* Devices.module.css */
-.page { padding: 32px; }
-.header { margin-bottom: 24px; }
-.title { font-family: var(--mono); font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-.subtitle { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
-.demoBanner { background: rgba(61,158,255,0.06); border: 1px solid rgba(61,158,255,0.2); border-radius: var(--radius); padding: 12px 16px; font-size: 13px; color: var(--text-mid); margin-bottom: 24px; }
-.demoBanner code { font-family: var(--mono); font-size: 12px; color: var(--blue); }
-.section { margin-bottom: 32px; }
-.sectionTitle { font-size: 11px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
-.deviceList { display: flex; flex-direction: column; gap: 10px; }
-.deviceCard { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; transition: border-color 0.15s; }
-.deviceCard:hover { border-color: rgba(255,255,255,0.12); }
-.disconnected { opacity: 0.7; }
-.deviceLeft { display: flex; gap: 14px; align-items: flex-start; }
-.deviceDot { width: 10px; height: 10px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
-.deviceName { font-weight: 600; font-size: 14px; margin-bottom: 3px; }
-.deviceDesc { font-size: 12px; color: var(--text-dim); line-height: 1.5; }
-.lastSync { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
-.docsLink { display: inline-block; margin-top: 5px; font-size: 11px; color: var(--blue); transition: opacity 0.15s; }
-.docsLink:hover { opacity: 0.7; }
-.deviceRight { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-.connectedBadge { font-size: 11px; color: var(--green); font-weight: 600; }
-.connectBtn { padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 500; background: transparent; border: 1px solid; transition: all 0.15s; }
-.connectBtn:hover { opacity: 0.8; }
-.disconnectBtn { padding: 7px 14px; border-radius: 7px; font-size: 12px; font-weight: 500; background: rgba(255,56,96,0.08); border: 1px solid rgba(255,56,96,0.2); color: var(--red); transition: all 0.15s; }
-.disconnectBtn:hover { background: rgba(255,56,96,0.15); }
+.container { padding: 2rem; }
+.container h1 { color: #fff; margin-bottom: 1.5rem; }
+.empty { color: #888; }
+.empty a { color: #4ade80; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
+.card { background: #1a1a1a; border-radius: 12px; padding: 1.5rem; }
+.card h3 { color: #fff; margin: 0 0 0.5rem; }
+.provider { color: #888; margin: 0; }
+.sync { color: #4ade80; font-size: 0.85rem; margin-top: 1rem; }

@@ -1,211 +1,38 @@
-.page {
-  padding: 32px;
-  min-height: 100%;
-}
+.container { padding: 2rem; }
+.header { margin-bottom: 2rem; }
+.dateNav { display: flex; align-items: center; gap: 1rem; }
+.navBtn { background: #333; border: none; color: #fff; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; font-size: 1rem; }
+.navBtn:hover { background: #444; }
+.navBtn:disabled { opacity: 0.3; cursor: not-allowed; }
+.todayBtn { background: #4ade80; color: #000; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 500; }
+.dateInfo { text-align: center; min-width: 280px; }
+.title { color: #fff; margin: 0; font-size: 1.8rem; }
+.date { color: #888; margin: 0.25rem 0 0; }
+.sync { color: #666; font-size: 0.85rem; margin-top: 0.5rem; }
+.empty { color: #888; }
+.empty a { color: #4ade80; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+.metricCard { background: #1a1a1a; border-radius: 12px; padding: 1.25rem; position: relative; }
+.metricIcon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+.metricLabel { color: #888; font-size: 0.85rem; margin-bottom: 0.25rem; }
+.metricValue { font-size: 1.8rem; font-weight: 600; }
+.unit { font-size: 0.9rem; color: #666; margin-left: 4px; }
+.deviceTag { position: absolute; top: 0.75rem; right: 0.75rem; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; color: #000; }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 24px;
-}
+.averagesSection { margin-top: 3rem; background: #1a1a1a; border-radius: 12px; padding: 1.5rem; }
+.averagesTitle { color: #fff; margin: 0 0 1rem; font-size: 1.3rem; }
+.averagesTable { display: flex; flex-direction: column; gap: 0.5rem; }
+.avgHeader { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; padding: 0.5rem 0; border-bottom: 1px solid #333; }
+.avgHeader div { color: #888; font-size: 0.85rem; font-weight: 500; }
+.avgRow { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; padding: 0.5rem 0; border-bottom: 1px solid #222; }
+.avgMetric { color: #fff; }
+.avgValue { color: #4ade80; font-variant-numeric: tabular-nums; }
 
-.title {
-  font-family: var(--mono);
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  color: var(--text);
-}
-
-.subtitle {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 13px;
-  color: var(--text-dim);
-  margin-top: 4px;
-}
-
-.demoBadge {
-  background: rgba(255, 193, 7, 0.15);
-  color: var(--yellow);
-  border: 1px solid rgba(255, 193, 7, 0.3);
-  font-family: var(--mono);
-  font-size: 10px;
-  padding: 2px 7px;
-  border-radius: 4px;
-  letter-spacing: 0.08em;
-}
-
-.headerRight {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.deviceCount {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: var(--text-dim);
-}
-
-.dcDot {
-  width: 6px;
-  height: 6px;
-  background: var(--green);
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-.syncBtn {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  background: rgba(0,232,122,0.1);
-  color: var(--green);
-  border: 1px solid rgba(0,232,122,0.25);
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  transition: all 0.15s ease;
-}
-
-.syncBtn:hover { background: rgba(0,232,122,0.18); }
-.syncBtn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-.syncIcon {
-  font-size: 16px;
-  line-height: 1;
-  transition: transform 0.5s;
-}
-
-.syncing .syncIcon { animation: spin 1s linear infinite; }
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.demoBanner {
-  background: rgba(255, 193, 7, 0.06);
-  border: 1px solid rgba(255, 193, 7, 0.2);
-  border-radius: var(--radius);
-  padding: 12px 16px;
-  font-size: 13px;
-  color: var(--text-mid);
-  margin-bottom: 20px;
-}
-
-.deviceBar {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 28px;
-}
-
-.deviceChip {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 6px 13px;
-  font-size: 12px;
-  color: var(--text-mid);
-}
-
-.deviceChipDot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.lastSync {
-  color: var(--text-dim);
-  font-size: 11px;
-  margin-left: 2px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
-}
-
-.metricCard {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px;
-  transition: border-color 0.15s;
-}
-
-.metricCard:hover { border-color: rgba(255,255,255,0.12); }
-
-.metricHeader {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 14px;
-}
-
-.metricIcon {
-  font-size: 15px;
-  color: var(--text-dim);
-  width: 18px;
-  text-align: center;
-}
-
-.metricLabel {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.metricValues {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-
-.metricRow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.deviceDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.deviceName {
-  font-size: 12px;
-  color: var(--text-dim);
-  flex: 1;
-}
-
-.metricValue {
-  font-family: var(--mono);
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-
-.metricUnit {
-  font-size: 10px;
-  font-weight: 400;
-  opacity: 0.6;
-}
+.chartsSection { margin-top: 2rem; background: #1a1a1a; border-radius: 12px; padding: 1.5rem; }
+.chartHeader { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
+.chartTitle { color: #fff; margin: 0; font-size: 1.3rem; }
+.chartTabs { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.chartTab { background: #333; border: none; color: #888; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+.chartTab:hover { background: #444; color: #fff; }
+.chartTab.active { background: var(--tab-color); color: #000; }
+.chartContainer { width: 100%; }

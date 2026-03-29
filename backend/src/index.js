@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express    = require('express');
+const fileUpload = require('express-fileupload');
 const cors       = require('cors');
 const { initDB } = require('./models/database');
 
@@ -17,20 +18,22 @@ const PORT = process.env.PORT || 4000;
 
 app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:3000', credentials: true }));
 app.use(express.json());
+app.use(fileUpload({ limits: { fileSize: 500 * 1024 * 1024 }, useTempFiles: true }));
 app.use(defaultLimiter);
 
 initDB();
 
 // Public
 app.get('/health', (req, res) => res.json({ status: 'ok', version: '1.0.1' }));
-app.use('/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 
 // Protected
-app.use('/metrics', requireAuth, metricsRoutes);
-app.use('/devices', requireAuth, devicesRoutes);
-app.use('/export',  requireAuth, exportRoutes);
-app.use('/sync',    requireAuth, syncRoutes);
-app.use('/import',  requireAuth, importRoutes);
+app.use('/api/metrics/averages', requireAuth, require('./routes/averages'));
+app.use('/api/metrics', requireAuth, metricsRoutes);
+app.use('/api/devices', requireAuth, devicesRoutes);
+app.use('/api/export',  requireAuth, exportRoutes);
+app.use('/api/sync',    requireAuth, syncRoutes);
+app.use('/api/import',  requireAuth, importRoutes);
 
 const { serveStatic } = require('./static');
 serveStatic(app);

@@ -8,15 +8,18 @@
     "start": "node src/index.js"
   },
   "dependencies": {
+    "adm-zip": "^0.5.16",
     "axios": "^1.6.0",
     "better-sqlite3": "^9.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.0",
     "express": "^4.18.0",
+    "express-fileupload": "^1.5.2",
     "express-rate-limit": "^7.2.0",
     "jsonwebtoken": "^9.0.0",
     "passport": "^0.7.0",
-    "passport-oauth2": "^1.7.0"
+    "passport-oauth2": "^1.7.0",
+    "sax": "^1.6.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.0"

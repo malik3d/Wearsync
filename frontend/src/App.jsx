@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
 import Dashboard from './pages/Dashboard.jsx';
 import History   from './pages/History.jsx';
 import Compare   from './pages/Compare.jsx';
 import Devices   from './pages/Devices.jsx';
 import Export    from './pages/Export.jsx';
+import Import    from './pages/Import.jsx';
 import styles    from './App.module.css';
 
 const NAV = [
@@ -12,6 +13,7 @@ const NAV = [
   { path: '/history', label: 'History',   icon: '◷' },
   { path: '/compare', label: 'Compare',   icon: '⊞' },
   { path: '/devices', label: 'Devices',   icon: '◉' },
+  { path: '/import',  label: 'Import',    icon: '📱' },
   { path: '/export',  label: 'Export',    icon: '↗' },
 ];
 
@@ -37,7 +39,7 @@ function Sidebar() {
         ))}
       </ul>
       <div className={styles.sidebarFooter}>
-        <span className={styles.version}>v1.0.0 · OSS</span>
+        <span className={styles.version}>v1.0.1</span>
       </div>
     </nav>
   );
@@ -54,6 +56,7 @@ export default function App() {
             <Route path="/history" element={<History />} />
             <Route path="/compare" element={<Compare />} />
             <Route path="/devices" element={<Devices />} />
+            <Route path="/import"  element={<Import />} />
             <Route path="/export"  element={<Export />} />
           </Routes>
         </main>
