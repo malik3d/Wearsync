@@ -116,13 +116,13 @@ function normalizeWhoop(date, recovery, sleep, workout) {
 }
 
 // ─── WITHINGS ─────────────────────────────────────────────────────────────────
-function normalizeWithings(date, activity, sleep, heart) {
+function normalizeWithings(date, activity, sleep, heart, body = {}) {
   const a = activity?.body?.activities?.[0] || {};
   const sl = sleep?.body?.series?.[0] || {};
   return {
     device: 'withings',
     date,
-    hr_avg:            heart?.body?.series?.[0]?.heart_rate?.average ?? null,
+    hr_avg:            body.heart_rate ?? heart?.body?.series?.[0]?.heart_rate?.average ?? null,
     hr_min:            heart?.body?.series?.[0]?.heart_rate?.min ?? null,
     hr_max:            heart?.body?.series?.[0]?.heart_rate?.max ?? null,
     hrv_ms:            null,
@@ -143,10 +143,21 @@ function normalizeWithings(date, activity, sleep, heart) {
 
     recovery_score:    null,
     strain_score:      null,
-    spo2_avg:          null,
+    spo2_avg:          body.spo2 ?? null,
     stress_avg:        null,
 
-    raw: JSON.stringify({ activity, sleep, heart }),
+    // Body composition (mainly Withings)
+    weight_kg:         body.weight_kg ?? null,
+    fat_ratio:         body.fat_ratio ?? null,
+    fat_mass_kg:       body.fat_mass_kg ?? null,
+    hydration_kg:      body.hydration_kg ?? null,
+    muscle_mass_kg:    body.muscle_mass_kg ?? null,
+    bone_mass_kg:      body.bone_mass_kg ?? null,
+    systolic_bp:       body.systolic_bp ?? null,
+    diastolic_bp:      body.diastolic_bp ?? null,
+    pulse_wave_velocity: body.pulse_wave_velocity ?? null,
+
+    raw: JSON.stringify({ activity, sleep, heart, body }),
   };
 }
 

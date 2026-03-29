@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './History.module.css';
 
 const METRICS = [
+<<<<<<< HEAD
   { key: 'hr_avg', label: 'Avg HR', unit: 'bpm' },
   { key: 'resting_hr', label: 'Resting HR', unit: 'bpm' },
   { key: 'hrv_ms', label: 'HRV', unit: 'ms' },
@@ -9,6 +10,26 @@ const METRICS = [
   { key: 'steps', label: 'Steps', unit: '', fmt: v => v?.toLocaleString() },
   { key: 'calories_total', label: 'Calories', unit: 'kcal' },
   { key: 'spo2_avg', label: 'SpO₂', unit: '%' },
+=======
+  { key: 'hrv_ms',          label: 'HRV',           unit: 'ms' },
+  { key: 'resting_hr',      label: 'Resting HR',    unit: 'bpm' },
+  { key: 'sleep_score',     label: 'Sleep Score',   unit: '' },
+  { key: 'recovery_score',  label: 'Recovery',      unit: '%' },
+  { key: 'steps',           label: 'Steps',         unit: '' },
+  { key: 'spo2_avg',        label: 'SpO₂',          unit: '%' },
+  { key: 'calories_total',  label: 'Calories',      unit: 'kcal' },
+  { key: 'active_min',      label: 'Active Minutes', unit: 'min' },
+
+  // Withings/body composition
+  { key: 'weight_kg',       label: 'Weight',        unit: 'kg' },
+  { key: 'fat_ratio',       label: 'Body Fat',      unit: '%' },
+  { key: 'fat_mass_kg',     label: 'Fat Mass',      unit: 'kg' },
+  { key: 'hydration_kg',    label: 'Body Water',    unit: 'kg' },
+  { key: 'muscle_mass_kg',  label: 'Muscle Mass',   unit: 'kg' },
+  { key: 'bone_mass_kg',    label: 'Bone Mass',     unit: 'kg' },
+  { key: 'systolic_bp',     label: 'Systolic BP',   unit: 'mmHg' },
+  { key: 'diastolic_bp',    label: 'Diastolic BP',  unit: 'mmHg' },
+>>>>>>> fix/withings-sync
 ];
 
 export default function History() {

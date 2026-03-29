@@ -28,7 +28,7 @@ router.get('/range', (req, res) => {
   if (!from || !to) return res.status(400).json({ error: 'from and to required' });
 
   const deviceList = devices ? devices.split(',') : null;
-  let query  = 'SELECT device, date, hr_avg, hr_min, hr_max, hrv_ms, resting_hr, sleep_duration_s, sleep_score, steps, calories_total, active_min, recovery_score, strain_score, spo2_avg, stress_avg FROM metrics WHERE date>=? AND date<=?';
+  let query  = 'SELECT device, date, hr_avg, hr_min, hr_max, hrv_ms, resting_hr, sleep_duration_s, sleep_score, steps, calories_total, active_min, recovery_score, strain_score, spo2_avg, stress_avg, weight_kg, fat_ratio, fat_mass_kg, hydration_kg, muscle_mass_kg, bone_mass_kg, systolic_bp, diastolic_bp, pulse_wave_velocity FROM metrics WHERE date>=? AND date<=?';
   const args = [from, to];
 
   if (deviceList?.length) {
@@ -57,7 +57,9 @@ router.get('/compare', (req, res) => {
   if (!metric || !from || !to) return res.status(400).json({ error: 'metric, from, to required' });
 
   const ALLOWED = ['hr_avg','hrv_ms','resting_hr','sleep_duration_s','sleep_score',
-                   'steps','calories_total','recovery_score','strain_score','spo2_avg'];
+                   'steps','calories_total','recovery_score','strain_score','spo2_avg',
+                   'weight_kg','fat_ratio','fat_mass_kg','hydration_kg','muscle_mass_kg','bone_mass_kg',
+                   'systolic_bp','diastolic_bp','pulse_wave_velocity'];
   if (!ALLOWED.includes(metric)) return res.status(400).json({ error: 'invalid metric' });
 
   const rows = db.prepare(
@@ -72,6 +74,15 @@ router.get('/compare', (req, res) => {
   }
 
   res.json(grouped);
+});
+
+// DELETE /metrics/:provider — delete all data for a specific device
+router.delete('/:provider', (req, res) => {
+  const db = getDB();
+  const provider = req.params.provider;
+  db.prepare('DELETE FROM metrics WHERE device=?').run(provider);
+  db.prepare('UPDATE devices SET last_sync=NULL WHERE provider=?').run(provider);
+  res.json({ ok: true, deleted: provider });
 });
 
 module.exports = router;

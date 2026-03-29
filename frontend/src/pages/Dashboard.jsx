@@ -13,6 +13,12 @@ const METRIC_DEFS = [
   { key: 'active_min', label: 'Active Min', unit: 'min', icon: '🏃', good: v => v >= 30, warn: v => v < 15 },
   { key: 'spo2_avg', label: 'SpO₂', unit: '%', icon: '🫁', good: v => v >= 97, warn: v => v < 95 },
   { key: 'distance_m', label: 'Distance', unit: 'km', icon: '📍', good: () => false, warn: () => false, fmt: v => (v/1000).toFixed(1) },
+  // Withings body metrics
+  { key: 'weight_kg', label: 'Weight', unit: 'kg', icon: '⚖️', good: () => false, warn: () => false, fmt: v => v?.toFixed(1) },
+  { key: 'fat_ratio', label: 'Body Fat', unit: '%', icon: '📊', good: v => v < 20, warn: v => v > 30 },
+  { key: 'muscle_mass_kg', label: 'Muscle', unit: 'kg', icon: '💪', good: () => false, warn: () => false, fmt: v => v?.toFixed(1) },
+  { key: 'systolic_bp', label: 'Systolic', unit: 'mmHg', icon: '🩺', good: v => v < 120, warn: v => v > 140 },
+  { key: 'diastolic_bp', label: 'Diastolic', unit: 'mmHg', icon: '🩺', good: v => v < 80, warn: v => v > 90 },
 ];
 
 const CHART_METRICS = [
@@ -21,9 +27,10 @@ const CHART_METRICS = [
   { key: 'hrv_ms', label: 'HRV', color: '#cc5de8', unit: 'ms' },
   { key: 'steps', label: 'Steps', color: '#4ade80', unit: '' },
   { key: 'sleep_duration_s', label: 'Sleep', color: '#339af0', unit: 'h', transform: v => v ? (v/3600).toFixed(1) : null },
+  { key: 'weight_kg', label: 'Weight', color: '#ffd43b', unit: 'kg' },
 ];
 
-const COLORS = { apple: '#ff6b6b', garmin: '#4ecdc4', whoop: '#ffe66d', fitbit: '#45b7d1' };
+const COLORS = { apple: '#ff6b6b', garmin: '#4ecdc4', whoop: '#ffe66d', fitbit: '#45b7d1', withings: '#00d4aa' };
 
 function MetricCard({ def, value, device }) {
   if (value == null) return null;
@@ -59,6 +66,7 @@ function AveragesTable({ averages }) {
     { key: 'calories_total', label: 'Calories', unit: 'kcal', fmt: v => Math.round(v).toLocaleString() },
     { key: 'spo2_avg', label: 'SpO₂', unit: '%' },
     { key: 'distance_m', label: 'Distance', unit: 'km', fmt: v => (v/1000).toFixed(1) },
+    { key: 'weight_kg', label: 'Weight', unit: 'kg', fmt: v => v?.toFixed(1) },
   ];
 
   const format = (val, m) => {
@@ -95,7 +103,7 @@ function TrendCharts({ data, selectedMetric, onSelectMetric }) {
   const metric = CHART_METRICS.find(m => m.key === selectedMetric) || CHART_METRICS[0];
   
   const chartData = data.map(row => ({
-    date: row.date.slice(5), // MM-DD
+    date: row.date.slice(5),
     value: metric.transform ? parseFloat(metric.transform(row[metric.key])) : row[metric.key],
   })).filter(d => d.value != null);
 
@@ -153,7 +161,13 @@ export default function Dashboard() {
   const [selectedMetric, setSelectedMetric] = useState('hr_avg');
 
   useEffect(() => { loadData(); }, [currentDate]);
-  useEffect(() => { loadAverages(); loadTrends(); }, []);
+  useEffect(() => { 
+    loadAverages(); 
+    loadTrends(); 
+    // Auto-refresh every 30s for background sync
+    const interval = setInterval(() => { loadData(); loadTrends(); }, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   async function loadData() {
     setLoading(true);

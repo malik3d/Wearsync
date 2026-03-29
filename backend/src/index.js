@@ -1,4 +1,6 @@
-require('dotenv').config();
+const path = require('path');
+// In container __dirname is /app/src, so .env is one level up at /app/.env
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const express    = require('express');
 const fileUpload = require('express-fileupload');
 const cors       = require('cors');

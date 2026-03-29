@@ -68,12 +68,41 @@ function initDB() {
       spo2_avg       REAL,
       stress_avg     REAL,
 
+      -- Body composition / blood pressure (mainly Withings)
+      weight_kg      REAL,
+      fat_ratio      REAL,
+      fat_mass_kg    REAL,
+      hydration_kg   REAL,
+      muscle_mass_kg REAL,
+      bone_mass_kg   REAL,
+      systolic_bp    REAL,
+      diastolic_bp   REAL,
+      pulse_wave_velocity REAL,
+
       -- Raw JSON blob for device-specific extras
       raw JSON,
 
       UNIQUE(device, date)
     );
   `);
+
+  // Backward-compatible migrations for existing DBs
+  const existingCols = db.prepare("PRAGMA table_info(metrics)").all().map(r => r.name);
+  const addColIfMissing = (name, type) => {
+    if (!existingCols.includes(name)) {
+      db.exec(`ALTER TABLE metrics ADD COLUMN ${name} ${type}`);
+    }
+  };
+
+  addColIfMissing('weight_kg', 'REAL');
+  addColIfMissing('fat_ratio', 'REAL');
+  addColIfMissing('fat_mass_kg', 'REAL');
+  addColIfMissing('hydration_kg', 'REAL');
+  addColIfMissing('muscle_mass_kg', 'REAL');
+  addColIfMissing('bone_mass_kg', 'REAL');
+  addColIfMissing('systolic_bp', 'REAL');
+  addColIfMissing('diastolic_bp', 'REAL');
+  addColIfMissing('pulse_wave_velocity', 'REAL');
 
   // Intraday heart rate (high-res)
   db.exec(`

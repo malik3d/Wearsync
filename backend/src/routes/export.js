@@ -30,7 +30,7 @@ router.get('/csv', (req, res) => {
   const { from, to, devices } = req.query;
   const db = getDB();
 
-  let query  = 'SELECT device,date,hr_avg,hr_min,hr_max,hrv_ms,resting_hr,sleep_duration_s,sleep_score,sleep_deep_s,sleep_rem_s,steps,calories_total,active_min,distance_m,recovery_score,strain_score,spo2_avg,stress_avg FROM metrics WHERE 1=1';
+  let query  = 'SELECT device,date,hr_avg,hr_min,hr_max,hrv_ms,resting_hr,sleep_duration_s,sleep_score,sleep_deep_s,sleep_rem_s,steps,calories_total,active_min,distance_m,recovery_score,strain_score,spo2_avg,stress_avg,weight_kg,fat_ratio,fat_mass_kg,hydration_kg,muscle_mass_kg,bone_mass_kg,systolic_bp,diastolic_bp,pulse_wave_velocity FROM metrics WHERE 1=1';
   const args = [];
 
   if (from) { query += ' AND date>=?'; args.push(from); }

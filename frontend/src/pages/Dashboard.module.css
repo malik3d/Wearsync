@@ -1,38 +1,70 @@
-.container { padding: 2rem; }
-.header { margin-bottom: 2rem; }
-.dateNav { display: flex; align-items: center; gap: 1rem; }
-.navBtn { background: #333; border: none; color: #fff; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; font-size: 1rem; }
+.container { padding: 1.5rem; max-width: 1400px; margin: 0 auto; }
+
+.header { margin-bottom: 1.5rem; }
+.dateNav { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.navBtn { background: #333; border: none; color: #fff; width: 44px; height: 44px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; flex-shrink: 0; }
 .navBtn:hover { background: #444; }
 .navBtn:disabled { opacity: 0.3; cursor: not-allowed; }
 .todayBtn { background: #4ade80; color: #000; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 500; }
-.dateInfo { text-align: center; min-width: 280px; }
-.title { color: #fff; margin: 0; font-size: 1.8rem; }
-.date { color: #888; margin: 0.25rem 0 0; }
-.sync { color: #666; font-size: 0.85rem; margin-top: 0.5rem; }
+.dateInfo { text-align: center; flex: 1; min-width: 200px; }
+.title { color: #fff; margin: 0; font-size: 1.5rem; }
+.date { color: #888; margin: 0.25rem 0 0; font-size: 0.9rem; }
+.sync { color: #666; font-size: 0.8rem; margin-top: 0.5rem; text-align: center; }
 .empty { color: #888; }
 .empty a { color: #4ade80; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
-.metricCard { background: #1a1a1a; border-radius: 12px; padding: 1.25rem; position: relative; }
-.metricIcon { font-size: 1.5rem; margin-bottom: 0.5rem; }
-.metricLabel { color: #888; font-size: 0.85rem; margin-bottom: 0.25rem; }
-.metricValue { font-size: 1.8rem; font-weight: 600; }
-.unit { font-size: 0.9rem; color: #666; margin-left: 4px; }
-.deviceTag { position: absolute; top: 0.75rem; right: 0.75rem; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; color: #000; }
 
-.averagesSection { margin-top: 3rem; background: #1a1a1a; border-radius: 12px; padding: 1.5rem; }
-.averagesTitle { color: #fff; margin: 0 0 1rem; font-size: 1.3rem; }
-.averagesTable { display: flex; flex-direction: column; gap: 0.5rem; }
-.avgHeader { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; padding: 0.5rem 0; border-bottom: 1px solid #333; }
-.avgHeader div { color: #888; font-size: 0.85rem; font-weight: 500; }
-.avgRow { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; padding: 0.5rem 0; border-bottom: 1px solid #222; }
-.avgMetric { color: #fff; }
-.avgValue { color: #4ade80; font-variant-numeric: tabular-nums; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem; }
+.metricCard { background: #1a1a1a; border-radius: 12px; padding: 1rem; position: relative; }
+.metricIcon { font-size: 1.25rem; margin-bottom: 0.4rem; }
+.metricLabel { color: #888; font-size: 0.75rem; margin-bottom: 0.2rem; }
+.metricValue { font-size: 1.5rem; font-weight: 600; }
+.unit { font-size: 0.75rem; color: #666; margin-left: 2px; }
+.deviceTag { position: absolute; top: 0.5rem; right: 0.5rem; font-size: 0.6rem; padding: 2px 5px; border-radius: 4px; color: #000; }
 
-.chartsSection { margin-top: 2rem; background: #1a1a1a; border-radius: 12px; padding: 1.5rem; }
-.chartHeader { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
-.chartTitle { color: #fff; margin: 0; font-size: 1.3rem; }
-.chartTabs { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-.chartTab { background: #333; border: none; color: #888; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+.chartsSection { margin-top: 1.5rem; background: #1a1a1a; border-radius: 12px; padding: 1rem; }
+.chartHeader { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1rem; }
+.chartTitle { color: #fff; margin: 0; font-size: 1.1rem; }
+.chartTabs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.chartTab { background: #333; border: none; color: #888; padding: 0.35rem 0.6rem; border-radius: 6px; cursor: pointer; font-size: 0.75rem; transition: all 0.2s; }
 .chartTab:hover { background: #444; color: #fff; }
 .chartTab.active { background: var(--tab-color); color: #000; }
-.chartContainer { width: 100%; }
+.chartContainer { width: 100%; margin: 0 -0.5rem; }
+
+.averagesSection { margin-top: 1.5rem; background: #1a1a1a; border-radius: 12px; padding: 1rem; overflow-x: auto; }
+.averagesTitle { color: #fff; margin: 0 0 1rem; font-size: 1.1rem; }
+.averagesTable { display: flex; flex-direction: column; gap: 0.4rem; min-width: 400px; }
+.avgHeader { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; padding: 0.4rem 0; border-bottom: 1px solid #333; }
+.avgHeader div { color: #888; font-size: 0.75rem; font-weight: 500; }
+.avgRow { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; padding: 0.4rem 0; border-bottom: 1px solid #222; }
+.avgMetric { color: #fff; font-size: 0.85rem; }
+.avgValue { color: #4ade80; font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+
+/* Mobile: <= 480px */
+@media (max-width: 480px) {
+  .container { padding: 1rem; }
+  .dateNav { justify-content: center; }
+  .navBtn { width: 40px; height: 40px; }
+  .dateInfo { min-width: 150px; }
+  .title { font-size: 1.25rem; }
+  .date { font-size: 0.8rem; }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+  .metricCard { padding: 0.75rem; }
+  .metricIcon { font-size: 1rem; }
+  .metricLabel { font-size: 0.7rem; }
+  .metricValue { font-size: 1.25rem; }
+  .chartTabs { gap: 0.25rem; }
+  .chartTab { padding: 0.3rem 0.5rem; font-size: 0.7rem; }
+  .avgHeader, .avgRow { grid-template-columns: 1.2fr 0.9fr 0.9fr 0.9fr; }
+  .avgMetric, .avgValue { font-size: 0.75rem; }
+}
+
+/* Tablet: 481px - 768px */
+@media (min-width: 481px) and (max-width: 768px) {
+  .grid { grid-template-columns: repeat(3, 1fr); }
+  .chartHeader { flex-direction: row; justify-content: space-between; align-items: center; }
+}
+
+/* Desktop: > 768px */
+@media (min-width: 769px) {
+  .chartHeader { flex-direction: row; justify-content: space-between; align-items: center; }
+}
