@@ -1,0 +1,13 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a0a; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif; }
+
+.app-layout { display: flex; min-height: 100vh; }
+.main-content { flex: 1; margin-left: 200px; transition: margin-left 0.3s ease; }
+
+.loading-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+.spinner { width: 40px; height: 40px; border: 3px solid #222; border-top-color: #4ade80; border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 768px) {
+  .main-content { margin-left: 60px; }
+}

@@ -36,6 +36,7 @@ app.use('/api/devices', requireAuth, devicesRoutes);
 app.use('/api/export',  requireAuth, exportRoutes);
 app.use('/api/sync',    requireAuth, syncRoutes);
 app.use('/api/import',  requireAuth, importRoutes);
+app.use('/api/profiles', require('./routes/profiles'));
 
 const { serveStatic } = require('./static');
 serveStatic(app);

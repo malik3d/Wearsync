@@ -1,66 +1,94 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
-import Dashboard from './pages/Dashboard.jsx';
-import History   from './pages/History.jsx';
-import Compare   from './pages/Compare.jsx';
-import Devices   from './pages/Devices.jsx';
-import Export    from './pages/Export.jsx';
-import Import    from './pages/Import.jsx';
-import styles    from './App.module.css';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Sidebar from './components/Sidebar';
+import Dashboard from './pages/Dashboard';
+import History from './pages/History';
+import Devices from './pages/Devices';
+import Import from './pages/Import';
+import Setup from './pages/Setup';
+import Login from './pages/Login';
+import './App.css';
 
-const NAV = [
-  { path: '/',        label: 'Dashboard', icon: '◈' },
-  { path: '/history', label: 'History',   icon: '◷' },
-  { path: '/compare', label: 'Compare',   icon: '⊞' },
-  { path: '/devices', label: 'Devices',   icon: '◉' },
-  { path: '/import',  label: 'Import',    icon: '📱' },
-  { path: '/export',  label: 'Export',    icon: '↗' },
-];
+function AppContent() {
+  const [authState, setAuthState] = useState('loading'); // loading, setup, login, authenticated
+  const [profileId, setProfileId] = useState(null);
 
-function Sidebar() {
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  async function checkAuth() {
+    try {
+      // Check if profiles exist
+      const res = await fetch('/api/profiles/exists');
+      const { exists } = await res.json();
+      
+      if (!exists) {
+        setAuthState('setup');
+        return;
+      }
+
+      // Check if already logged in
+      const savedId = localStorage.getItem('profile_id');
+      if (savedId) {
+        setProfileId(parseInt(savedId));
+        setAuthState('authenticated');
+      } else {
+        setAuthState('login');
+      }
+    } catch (e) {
+      console.error(e);
+      setAuthState('login');
+    }
+  }
+
+  function handleSetupComplete(id) {
+    setProfileId(id);
+    setAuthState('authenticated');
+  }
+
+  function handleLogin(id) {
+    setProfileId(id);
+    setAuthState('authenticated');
+  }
+
+  function handleLogout() {
+    localStorage.removeItem('profile_id');
+    setProfileId(null);
+    setAuthState('login');
+  }
+
+  if (authState === 'loading') {
+    return <div className="loading-screen"><div className="spinner" /></div>;
+  }
+
+  if (authState === 'setup') {
+    return <Setup onComplete={handleSetupComplete} />;
+  }
+
+  if (authState === 'login') {
+    return <Login onLogin={handleLogin} onCreateNew={() => setAuthState('setup')} />;
+  }
+
   return (
-    <nav className={styles.sidebar}>
-      <div className={styles.logo}>
-        <span className={styles.logoIcon}>⌁</span>
-        <span className={styles.logoText}>WearSync</span>
-      </div>
-      <ul className={styles.navList}>
-        {NAV.map(({ path, label, icon }) => (
-          <li key={path}>
-            <NavLink
-              to={path}
-              end={path === '/'}
-              className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ''}`}
-            >
-              <span className={styles.navIcon}>{icon}</span>
-              <span className={styles.navLabel}>{label}</span>
-            </NavLink>
-          </li>
-        ))}
-      </ul>
-      <div className={styles.sidebarFooter}>
-        <span className={styles.version}>v1.0.1</span>
-      </div>
-    </nav>
+    <div className="app-layout">
+      <Sidebar onLogout={handleLogout} />
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<Dashboard profileId={profileId} />} />
+          <Route path="/history" element={<History />} />
+          <Route path="/devices" element={<Devices />} />
+          <Route path="/import" element={<Import />} />
+        </Routes>
+      </main>
+    </div>
   );
 }
 
 export default function App() {
   return (
     <BrowserRouter>
-      <div className={styles.layout}>
-        <Sidebar />
-        <main className={styles.main}>
-          <Routes>
-            <Route path="/"        element={<Dashboard />} />
-            <Route path="/history" element={<History />} />
-            <Route path="/compare" element={<Compare />} />
-            <Route path="/devices" element={<Devices />} />
-            <Route path="/import"  element={<Import />} />
-            <Route path="/export"  element={<Export />} />
-          </Routes>
-        </main>
-      </div>
+      <AppContent />
     </BrowserRouter>
   );
 }

@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import VitalityCore from '../components/VitalityCore';
 import styles from './Dashboard.module.css';
 
 const METRIC_DEFS = [
@@ -7,145 +10,154 @@ const METRIC_DEFS = [
   { key: 'resting_hr', label: 'Resting HR', unit: 'bpm', icon: '💗', good: v => v < 60, warn: v => v > 75 },
   { key: 'hrv_ms', label: 'HRV', unit: 'ms', icon: '📈', good: v => v > 50, warn: v => v < 30 },
   { key: 'sleep_duration_s', label: 'Sleep', unit: 'h', icon: '😴', good: v => v >= 25200, warn: v => v < 21600, fmt: v => (v/3600).toFixed(1) },
-  { key: 'sleep_score', label: 'Sleep Score', unit: '', icon: '🌙', good: v => v >= 80, warn: v => v < 60 },
   { key: 'steps', label: 'Steps', unit: '', icon: '👟', good: v => v >= 10000, warn: v => v < 5000, fmt: v => v?.toLocaleString() },
   { key: 'calories_total', label: 'Calories', unit: 'kcal', icon: '🔥', good: () => false, warn: () => false, fmt: v => v?.toLocaleString() },
-  { key: 'active_min', label: 'Active Min', unit: 'min', icon: '🏃', good: v => v >= 30, warn: v => v < 15 },
   { key: 'spo2_avg', label: 'SpO₂', unit: '%', icon: '🫁', good: v => v >= 97, warn: v => v < 95 },
   { key: 'distance_m', label: 'Distance', unit: 'km', icon: '📍', good: () => false, warn: () => false, fmt: v => (v/1000).toFixed(1) },
-  // Withings body metrics
   { key: 'weight_kg', label: 'Weight', unit: 'kg', icon: '⚖️', good: () => false, warn: () => false, fmt: v => v?.toFixed(1) },
   { key: 'fat_ratio', label: 'Body Fat', unit: '%', icon: '📊', good: v => v < 20, warn: v => v > 30 },
-  { key: 'muscle_mass_kg', label: 'Muscle', unit: 'kg', icon: '💪', good: () => false, warn: () => false, fmt: v => v?.toFixed(1) },
-  { key: 'systolic_bp', label: 'Systolic', unit: 'mmHg', icon: '🩺', good: v => v < 120, warn: v => v > 140 },
-  { key: 'diastolic_bp', label: 'Diastolic', unit: 'mmHg', icon: '🩺', good: v => v < 80, warn: v => v > 90 },
 ];
 
 const CHART_METRICS = [
-  { key: 'hr_avg', label: 'Avg HR', color: '#ff6b6b', unit: 'bpm' },
-  { key: 'resting_hr', label: 'Resting HR', color: '#f06595', unit: 'bpm' },
-  { key: 'hrv_ms', label: 'HRV', color: '#cc5de8', unit: 'ms' },
-  { key: 'steps', label: 'Steps', color: '#4ade80', unit: '' },
-  { key: 'sleep_duration_s', label: 'Sleep', color: '#339af0', unit: 'h', transform: v => v ? (v/3600).toFixed(1) : null },
-  { key: 'weight_kg', label: 'Weight', color: '#ffd43b', unit: 'kg' },
+  { key: 'hr_avg', label: 'HR', color: '#ff6b6b' },
+  { key: 'resting_hr', label: 'Resting', color: '#f06595' },
+  { key: 'hrv_ms', label: 'HRV', color: '#cc5de8' },
+  { key: 'steps', label: 'Steps', color: '#4ade80' },
+  { key: 'sleep_duration_s', label: 'Sleep', color: '#339af0', transform: v => v ? +(v/3600).toFixed(1) : null },
 ];
 
-const COLORS = { apple: '#ff6b6b', garmin: '#4ecdc4', whoop: '#ffe66d', fitbit: '#45b7d1', withings: '#00d4aa' };
+function calculateFitnessLevel(averages) {
+  if (!averages?.month30) return null;
+  let score = 50;
+  const avg = averages.month30;
+  
+  if (avg.resting_hr) {
+    if (avg.resting_hr < 50) score += 40;
+    else if (avg.resting_hr < 55) score += 35;
+    else if (avg.resting_hr < 60) score += 30;
+    else if (avg.resting_hr < 65) score += 20;
+    else if (avg.resting_hr < 70) score += 10;
+    else if (avg.resting_hr > 80) score -= 10;
+  }
+  
+  if (avg.hrv_ms) {
+    if (avg.hrv_ms > 60) score += 30;
+    else if (avg.hrv_ms > 50) score += 25;
+    else if (avg.hrv_ms > 40) score += 15;
+    else if (avg.hrv_ms > 30) score += 5;
+    else score -= 5;
+  }
+  
+  if (avg.steps) {
+    if (avg.steps > 15000) score += 20;
+    else if (avg.steps > 10000) score += 15;
+    else if (avg.steps > 7500) score += 10;
+    else if (avg.steps > 5000) score += 5;
+  }
+  
+  if (avg.sleep_duration_s) {
+    const hours = avg.sleep_duration_s / 3600;
+    if (hours >= 7 && hours <= 9) score += 10;
+    else if (hours >= 6) score += 5;
+  }
+  
+  const fitnessAge = Math.max(18, Math.min(80, 65 - (score - 50) * 0.5));
+  const level = score >= 90 ? 'Elite' : score >= 75 ? 'Excellent' : score >= 60 ? 'Good' : score >= 45 ? 'Fair' : 'Needs Work';
+  
+  return { score: Math.round(score), fitnessAge: Math.round(fitnessAge), level };
+}
 
-function MetricCard({ def, value, device }) {
+function MetricCard({ def, value }) {
   if (value == null) return null;
   const color = def.good(value) ? '#4ade80' : def.warn(value) ? '#ef4444' : '#fbbf24';
   const display = def.fmt ? def.fmt(value) : value;
+  
   return (
     <div className={styles.metricCard}>
-      <div className={styles.metricIcon}>{def.icon}</div>
-      <div className={styles.metricLabel}>{def.label}</div>
-      <div className={styles.metricValue} style={{ color }}>{display}<span className={styles.unit}>{def.unit}</span></div>
-      <div className={styles.deviceTag} style={{ background: COLORS[device] || '#666' }}>{device}</div>
-    </div>
-  );
-}
-
-function formatDate(date) {
-  return date.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-}
-
-function dateStr(date) {
-  return date.toISOString().slice(0, 10);
-}
-
-function AveragesTable({ averages }) {
-  if (!averages) return null;
-  
-  const metrics = [
-    { key: 'hr_avg', label: 'Avg HR', unit: 'bpm' },
-    { key: 'resting_hr', label: 'Resting HR', unit: 'bpm' },
-    { key: 'hrv_ms', label: 'HRV', unit: 'ms' },
-    { key: 'sleep_duration_s', label: 'Sleep', unit: 'h', fmt: v => (v/3600).toFixed(1) },
-    { key: 'steps', label: 'Steps', unit: '', fmt: v => Math.round(v).toLocaleString() },
-    { key: 'calories_total', label: 'Calories', unit: 'kcal', fmt: v => Math.round(v).toLocaleString() },
-    { key: 'spo2_avg', label: 'SpO₂', unit: '%' },
-    { key: 'distance_m', label: 'Distance', unit: 'km', fmt: v => (v/1000).toFixed(1) },
-    { key: 'weight_kg', label: 'Weight', unit: 'kg', fmt: v => v?.toFixed(1) },
-  ];
-
-  const format = (val, m) => {
-    if (val == null) return '-';
-    return m.fmt ? m.fmt(val) : val.toFixed(1);
-  };
-
-  return (
-    <div className={styles.averagesSection}>
-      <h2 className={styles.averagesTitle}>📊 Durchschnitte</h2>
-      <div className={styles.averagesTable}>
-        <div className={styles.avgHeader}>
-          <div className={styles.avgMetric}>Metrik</div>
-          <div className={styles.avgValue}>7 Tage</div>
-          <div className={styles.avgValue}>30 Tage</div>
-          <div className={styles.avgValue}>Jahr {new Date().getFullYear()}</div>
-        </div>
-        {metrics.map(m => (
-          <div key={m.key} className={styles.avgRow}>
-            <div className={styles.avgMetric}>{m.label}</div>
-            <div className={styles.avgValue}>{format(averages.week7?.[m.key], m)} {m.unit}</div>
-            <div className={styles.avgValue}>{format(averages.month30?.[m.key], m)} {m.unit}</div>
-            <div className={styles.avgValue}>{format(averages.year?.[m.key], m)} {m.unit}</div>
-          </div>
-        ))}
+      <div className={styles.metricHeader}>
+        <span className={styles.metricIcon}>{def.icon}</span>
+        <span className={styles.metricLabel}>{def.label}</span>
+      </div>
+      <div className={styles.metricValue} style={{ color }}>
+        {display}
+        <span className={styles.metricUnit}>{def.unit}</span>
       </div>
     </div>
   );
 }
 
-function TrendCharts({ data, selectedMetric, onSelectMetric }) {
-  if (!data || data.length === 0) return null;
-
+function TrendChart({ data, selectedMetric, onSelectMetric }) {
+  if (!data?.length) return null;
   const metric = CHART_METRICS.find(m => m.key === selectedMetric) || CHART_METRICS[0];
   
   const chartData = data.map(row => ({
     date: row.date.slice(5),
-    value: metric.transform ? parseFloat(metric.transform(row[metric.key])) : row[metric.key],
+    value: metric.transform ? metric.transform(row[metric.key]) : row[metric.key],
   })).filter(d => d.value != null);
 
   return (
-    <div className={styles.chartsSection}>
+    <div className={styles.chartSection}>
       <div className={styles.chartHeader}>
-        <h2 className={styles.chartTitle}>📈 Trends (30 Tage)</h2>
+        <h3>📈 Trends</h3>
         <div className={styles.chartTabs}>
           {CHART_METRICS.map(m => (
             <button 
-              key={m.key} 
+              key={m.key}
               className={`${styles.chartTab} ${selectedMetric === m.key ? styles.active : ''}`}
-              style={{ '--tab-color': m.color }}
               onClick={() => onSelectMetric(m.key)}
+              style={{ '--color': m.color }}
             >
               {m.label}
             </button>
           ))}
         </div>
       </div>
-      <div className={styles.chartContainer}>
-        <ResponsiveContainer width="100%" height={250}>
-          <LineChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-            <XAxis dataKey="date" stroke="#666" fontSize={12} />
-            <YAxis stroke="#666" fontSize={12} domain={['auto', 'auto']} />
-            <Tooltip 
-              contentStyle={{ background: '#1a1a1a', border: '1px solid #333', borderRadius: 8 }}
-              labelStyle={{ color: '#888' }}
-              itemStyle={{ color: metric.color }}
-            />
-            <Line 
-              type="monotone" 
-              dataKey="value" 
-              stroke={metric.color} 
-              strokeWidth={2}
-              dot={{ fill: metric.color, r: 3 }}
-              activeDot={{ r: 5 }}
-              name={`${metric.label} ${metric.unit}`}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+      <ResponsiveContainer width="100%" height={180}>
+        <AreaChart data={chartData} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
+          <defs>
+            <linearGradient id={`grad-${metric.key}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={metric.color} stopOpacity={0.4} />
+              <stop offset="100%" stopColor={metric.color} stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <XAxis dataKey="date" stroke="#444" fontSize={10} tickLine={false} axisLine={false} />
+          <YAxis stroke="#444" fontSize={10} tickLine={false} axisLine={false} />
+          <Tooltip contentStyle={{ background: '#1a1a1a', border: '1px solid #333', borderRadius: 8, fontSize: 12 }} />
+          <Area type="monotone" dataKey="value" stroke={metric.color} strokeWidth={2} fill={`url(#grad-${metric.key})`} />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+function AveragesGrid({ averages }) {
+  if (!averages) return null;
+  const items = [
+    { key: 'hr_avg', label: 'Avg HR', unit: 'bpm' },
+    { key: 'resting_hr', label: 'Resting', unit: 'bpm' },
+    { key: 'hrv_ms', label: 'HRV', unit: 'ms' },
+    { key: 'sleep_duration_s', label: 'Sleep', unit: 'h', fmt: v => (v/3600).toFixed(1) },
+    { key: 'steps', label: 'Steps', fmt: v => (v/1000).toFixed(1) + 'k' },
+  ];
+  const fmt = (v, m) => v == null ? '-' : (m.fmt ? m.fmt(v) : v.toFixed(0));
+
+  return (
+    <div className={styles.avgSection}>
+      <h3>📊 Averages</h3>
+      <div className={styles.avgGrid}>
+        {items.map(m => (
+          <div key={m.key} className={styles.avgItem}>
+            <div className={styles.avgLabel}>{m.label}</div>
+            <div className={styles.avgRow}>
+              <span className={styles.avgVal}>{fmt(averages.week7?.[m.key], m)}</span>
+              <span className={styles.avgPeriod}>7d</span>
+            </div>
+            <div className={styles.avgRow}>
+              <span className={styles.avgVal}>{fmt(averages.month30?.[m.key], m)}</span>
+              <span className={styles.avgPeriod}>30d</span>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -154,88 +166,90 @@ function TrendCharts({ data, selectedMetric, onSelectMetric }) {
 export default function Dashboard() {
   const [data, setData] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [lastSync, setLastSync] = useState(null);
   const [loading, setLoading] = useState(true);
   const [averages, setAverages] = useState(null);
   const [trendData, setTrendData] = useState([]);
   const [selectedMetric, setSelectedMetric] = useState('hr_avg');
+  const [showCalendar, setShowCalendar] = useState(false);
 
   useEffect(() => { loadData(); }, [currentDate]);
-  useEffect(() => { 
-    loadAverages(); 
-    loadTrends(); 
-    // Auto-refresh every 30s for background sync
-    const interval = setInterval(() => { loadData(); loadTrends(); }, 30000);
-    return () => clearInterval(interval);
-  }, []);
+  useEffect(() => { loadAverages(); loadTrends(); }, []);
 
   async function loadData() {
     setLoading(true);
     try {
-      const date = dateStr(currentDate);
-      const [metrics, devices] = await Promise.all([
-        fetch(`/api/metrics?date=${date}`).then(r => r.json()),
-        fetch('/api/devices').then(r => r.json()).catch(() => [])
-      ]);
-      setData(metrics);
-      const apple = devices.find(d => d.provider === 'apple');
-      if (apple?.last_sync) setLastSync(apple.last_sync);
+      const date = currentDate.toISOString().slice(0, 10);
+      const res = await fetch(`/api/metrics?date=${date}`);
+      setData(await res.json());
     } catch (e) { console.error(e); }
     setLoading(false);
   }
 
   async function loadAverages() {
-    try {
-      const res = await fetch('/api/metrics/averages');
-      setAverages(await res.json());
-    } catch (e) { console.error(e); }
+    try { setAverages(await (await fetch('/api/metrics/averages')).json()); } catch (e) { console.error(e); }
   }
 
   async function loadTrends() {
     try {
       const to = new Date().toISOString().slice(0, 10);
       const from = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
-      const res = await fetch(`/api/metrics/range?from=${from}&to=${to}`);
-      const rows = await res.json();
-      setTrendData(rows.sort((a, b) => a.date.localeCompare(b.date)));
+      setTrendData((await (await fetch(`/api/metrics/range?from=${from}&to=${to}`)).json()).sort((a, b) => a.date.localeCompare(b.date)));
     } catch (e) { console.error(e); }
   }
 
-  function prevDay() { setCurrentDate(new Date(currentDate.getTime() - 86400000)); }
-  function nextDay() {
-    const tomorrow = new Date(currentDate.getTime() + 86400000);
-    if (tomorrow <= new Date()) setCurrentDate(tomorrow);
-  }
-  function goToday() { setCurrentDate(new Date()); }
-
-  const isToday = dateStr(currentDate) === dateStr(new Date());
+  const prevDay = () => setCurrentDate(new Date(currentDate.getTime() - 86400000));
+  const nextDay = () => { if (new Date(currentDate.getTime() + 86400000) <= new Date()) setCurrentDate(new Date(currentDate.getTime() + 86400000)); };
+  const isToday = currentDate.toISOString().slice(0, 10) === new Date().toISOString().slice(0, 10);
+  
   const row = data[0] || {};
+  const fitness = calculateFitnessLevel(averages);
+  const activeMetrics = METRIC_DEFS.filter(d => row[d.key] != null);
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <div className={styles.dateNav}>
-          <button onClick={prevDay} className={styles.navBtn}>◀</button>
-          <div className={styles.dateInfo}>
-            <h1 className={styles.title}>Dashboard</h1>
-            <p className={styles.date}>{formatDate(currentDate)}</p>
+      {/* Date Navigation */}
+      <div className={styles.dateNav}>
+        <button onClick={prevDay} className={styles.navBtn}>‹</button>
+        <button onClick={() => setShowCalendar(!showCalendar)} className={styles.dateBtn}>
+          {currentDate.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'short' })}
+        </button>
+        <button onClick={nextDay} className={styles.navBtn} disabled={isToday}>›</button>
+        {showCalendar && (
+          <div className={styles.calendarPopup}>
+            <DatePicker selected={currentDate} onChange={d => { setCurrentDate(d); setShowCalendar(false); }} maxDate={new Date()} inline />
           </div>
-          <button onClick={nextDay} className={styles.navBtn} disabled={isToday}>▶</button>
-          {!isToday && <button onClick={goToday} className={styles.todayBtn}>Heute</button>}
-        </div>
-        {lastSync && <p className={styles.sync}>Zuletzt aktualisiert: {new Date(lastSync).toLocaleString('de-DE')}</p>}
+        )}
       </div>
-      
-      {loading ? <p>Laden...</p> : data.length === 0 ? (
-        <p className={styles.empty}>Keine Daten für diesen Tag. <a href="/import">Daten importieren →</a></p>
+
+      {loading ? (
+        <div className={styles.loading}><div className={styles.spinner} /></div>
+      ) : data.length === 0 ? (
+        <div className={styles.empty}>Keine Daten für diesen Tag.<br/><a href="/import">Daten importieren →</a></div>
       ) : (
-        <div className={styles.grid}>
-          {METRIC_DEFS.map(def => <MetricCard key={def.key} def={def} value={row[def.key]} device={row.device} />)}
-        </div>
+        <>
+          {/* Hero: Vitality Core */}
+          {fitness && (
+            <div className={styles.hero}>
+              <VitalityCore score={fitness.score} fitnessAge={fitness.fitnessAge} level={fitness.level} />
+            </div>
+          )}
+
+          {/* Metrics Grid */}
+          <div className={styles.metricsGrid}>
+            {activeMetrics.map(def => <MetricCard key={def.key} def={def} value={row[def.key]} />)}
+          </div>
+
+          {/* Bottom: Charts & Averages */}
+          <div className={styles.bottomGrid}>
+            <TrendChart data={trendData} selectedMetric={selectedMetric} onSelectMetric={setSelectedMetric} />
+            <AveragesGrid averages={averages} />
+          </div>
+        </>
       )}
-      
-      <TrendCharts data={trendData} selectedMetric={selectedMetric} onSelectMetric={setSelectedMetric} />
-      <AveragesTable averages={averages} />
+
+      <a href="https://buymeacoffee.com/malik3d" target="_blank" rel="noopener noreferrer" className={styles.coffeeBtn}>
+        ☕ Support
+      </a>
     </div>
   );
 }

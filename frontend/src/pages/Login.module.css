@@ -1,0 +1,25 @@
+.container { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #0a0a0a; padding: 1rem; }
+.card { background: #111; border: 1px solid #222; border-radius: 24px; padding: 2.5rem; width: 100%; max-width: 400px; text-align: center; }
+.logo { font-size: 1.5rem; font-weight: 700; color: #4ade80; margin-bottom: 2rem; }
+.loading { color: #888; }
+.card h2 { color: #fff; font-size: 1.3rem; margin-bottom: 1.5rem; font-weight: 600; }
+.profiles { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem; }
+.profile { display: flex; align-items: center; gap: 1rem; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 1rem; cursor: pointer; transition: all 0.2s; }
+.profile:hover { border-color: #4ade80; }
+.avatar { width: 48px; height: 48px; background: linear-gradient(135deg, #4ade80, #22d3ee); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 700; color: #000; }
+.profileInfo { text-align: left; }
+.profileName { color: #fff; font-weight: 600; }
+.profileAge { color: #888; font-size: 0.85rem; }
+.selectedProfile { margin-bottom: 1.5rem; }
+.avatarLarge { width: 80px; height: 80px; background: linear-gradient(135deg, #4ade80, #22d3ee); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; color: #000; margin: 0 auto 1rem; }
+.selectedName { color: #fff; font-size: 1.2rem; font-weight: 600; }
+.pinInput { margin-bottom: 1rem; }
+.input { width: 100%; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 1rem; color: #fff; font-size: 1.2rem; text-align: center; letter-spacing: 8px; outline: none; }
+.input:focus { border-color: #4ade80; }
+.error { color: #ef4444; font-size: 0.85rem; margin-bottom: 1rem; }
+.btn { width: 100%; background: #4ade80; color: #000; border: none; border-radius: 12px; padding: 1rem; font-size: 1rem; font-weight: 600; cursor: pointer; }
+.btn:hover { background: #22c55e; }
+.backBtn { width: 100%; background: transparent; color: #888; border: none; padding: 0.75rem; font-size: 0.9rem; cursor: pointer; margin-top: 0.5rem; }
+.backBtn:hover { color: #fff; }
+.newBtn { width: 100%; background: transparent; border: 1px dashed #333; border-radius: 12px; padding: 1rem; color: #888; font-size: 0.95rem; cursor: pointer; }
+.newBtn:hover { border-color: #4ade80; color: #4ade80; }

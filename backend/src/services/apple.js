@@ -13,6 +13,13 @@ const TYPE_MAP = {
   HKQuantityTypeIdentifierAppleExerciseTime: 'active_min',
   HKQuantityTypeIdentifierOxygenSaturation: 'spo2',
   HKCategoryTypeIdentifierSleepAnalysis: 'sleep',
+  // Body composition
+  HKQuantityTypeIdentifierBodyMass: 'weight',
+  HKQuantityTypeIdentifierBodyFatPercentage: 'body_fat',
+  HKQuantityTypeIdentifierLeanBodyMass: 'lean_mass',
+  HKQuantityTypeIdentifierBodyMassIndex: 'bmi',
+  HKQuantityTypeIdentifierHeight: 'height',
+  HKQuantityTypeIdentifierWaistCircumference: 'waist',
 };
 
 const SLEEP_VALUES = {
@@ -43,6 +50,7 @@ function parseAppleHealthXML(xmlPath) {
     function ensure(date) {
       if (!daily[date]) daily[date] = {
         hr_values: [], hrv_values: [], spo2_values: [], resting_hr_values: [],
+        weight_values: [], body_fat_values: [], lean_mass_values: [], bmi_values: [],
         steps: 0, calories_active: 0, calories_basal: 0, distance_m: 0, active_min: 0,
         sleep: { deep: 0, rem: 0, light: 0, awake: 0, in_bed: 0, asleep: 0 },
       };
@@ -71,6 +79,10 @@ function parseAppleHealthXML(xmlPath) {
       else if (field === 'distance_m') { if (!isNaN(val)) d.distance_m += val * 1000; }
       else if (field === 'active_min') { if (!isNaN(val)) d.active_min += val; }
       else if (field === 'spo2') { if (!isNaN(val)) d.spo2_values.push(val * 100); }
+      else if (field === 'weight') { if (!isNaN(val)) d.weight_values.push(val); }
+      else if (field === 'body_fat') { if (!isNaN(val)) d.body_fat_values.push(val * 100); }
+      else if (field === 'lean_mass') { if (!isNaN(val)) d.lean_mass_values.push(val); }
+      else if (field === 'bmi') { if (!isNaN(val)) d.bmi_values.push(val); }
       else if (field === 'sleep') {
         const sleepType = SLEEP_VALUES[attrs.value] || 'asleep';
         const start = new Date(attrs.startDate);
@@ -113,6 +125,10 @@ function parseAppleHealthXML(xmlPath) {
           recovery_score: null,
           strain_score: null,
           spo2_avg: spo2 ? +spo2.toFixed(1) : null,
+          weight_kg: d.weight_values.length ? +avg(d.weight_values).toFixed(2) : null,
+          fat_ratio: d.body_fat_values.length ? +avg(d.body_fat_values).toFixed(1) : null,
+          lean_mass_kg: d.lean_mass_values.length ? +avg(d.lean_mass_values).toFixed(2) : null,
+          bmi: d.bmi_values.length ? +avg(d.bmi_values).toFixed(1) : null,
           stress_avg: null,
           raw: JSON.stringify({ source: 'apple_health_xml' }),
         });
@@ -135,11 +151,11 @@ function parseAppleHealthXML(xmlPath) {
 function importToDB(rows) {
   const db = getDB();
   const stmt = db.prepare(`
-    INSERT OR REPLACE INTO metrics (device, date, hr_avg, hr_min, hr_max, hrv_ms, resting_hr,
+    INSERT OR REPLACE INTO metrics (device, date, hr_avg, hr_min, hr_max, hrv_ms, resting_hr, weight_kg, fat_ratio, lean_mass_kg, bmi,
       sleep_duration_s, sleep_score, sleep_deep_s, sleep_rem_s, sleep_light_s, sleep_awake_s,
       steps, calories_total, calories_active, active_min, distance_m,
       recovery_score, strain_score, spo2_avg, stress_avg, raw)
-    VALUES (@device,@date,@hr_avg,@hr_min,@hr_max,@hrv_ms,@resting_hr,
+    VALUES (@device,@date,@hr_avg,@hr_min,@hr_max,@hrv_ms,@resting_hr,@weight_kg,@fat_ratio,@lean_mass_kg,@bmi,
       @sleep_duration_s,@sleep_score,@sleep_deep_s,@sleep_rem_s,@sleep_light_s,@sleep_awake_s,
       @steps,@calories_total,@calories_active,@active_min,@distance_m,
       @recovery_score,@strain_score,@spo2_avg,@stress_avg,@raw)
