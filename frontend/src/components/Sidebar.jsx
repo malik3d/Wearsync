@@ -1,48 +1,64 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './Sidebar.module.css';
 
-const NAV_ITEMS = [
-  { path: '/', icon: '◈', label: 'Dashboard' },
-  { path: '/history', icon: '◷', label: 'History' },
-  { path: '/devices', icon: '◉', label: 'Devices' },
-  { path: '/import', icon: '↑', label: 'Import' },
-];
-
 export default function Sidebar({ onLogout }) {
-  const [collapsed, setCollapsed] = useState(() => localStorage.getItem('sidebar_collapsed') === 'true');
+  const [showDisclaimer, setShowDisclaimer] = useState(false);
 
-  useEffect(() => {
-    localStorage.setItem('sidebar_collapsed', collapsed);
-  }, [collapsed]);
+  const NAV_ITEMS = [
+    { path: '/', icon: '🏠', label: 'Dashboard' },
+    { path: '/workouts', icon: '🏋️', label: 'Workouts' },
+    { path: '/history', icon: '📊', label: 'Verlauf' },
+    { path: '/compare', icon: '📈', label: 'Vergleich' },
+    { path: '/events', icon: '🏁', label: 'Events' },
+    { path: '/import', icon: '📥', label: 'Import' },
+    { path: '/export', icon: '📤', label: 'Export' },
+    { path: '/devices', icon: '⌚', label: 'Geräte' },
+    { path: '/settings', icon: '⚙️', label: 'Einstellungen' },
+  ];
 
   return (
-    <nav className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
-      <div className={styles.header}>
-        {!collapsed && <span className={styles.logo}>⚡ WearSync</span>}
-        <button onClick={() => setCollapsed(!collapsed)} className={styles.toggle}>
-          {collapsed ? '›' : '‹'}
-        </button>
+    <aside className={styles.sidebar}>
+      <div className={styles.logo}>
+        <span className={styles.logoIcon}>💚</span>
+        <span className={styles.logoText}>WearSync</span>
       </div>
       
-      <ul className={styles.nav}>
+      <nav className={styles.nav}>
         {NAV_ITEMS.map(item => (
-          <li key={item.path}>
-            <NavLink to={item.path} className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}>
-              <span className={styles.icon}>{item.icon}</span>
-              {!collapsed && <span className={styles.label}>{item.label}</span>}
-            </NavLink>
-          </li>
+          <NavLink key={item.path} to={item.path} className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ''}`}>
+            <span className={styles.navIcon}>{item.icon}</span>
+            <span className={styles.navLabel}>{item.label}</span>
+          </NavLink>
         ))}
-      </ul>
+      </nav>
       
       <div className={styles.footer}>
-        <button onClick={onLogout} className={styles.logoutBtn} title="Abmelden">
-          <span className={styles.icon}>⏻</span>
-          {!collapsed && <span className={styles.label}>Abmelden</span>}
+        <div className={styles.userCount}>
+          <span className={styles.userDot}></span>
+          <span>2.847 Nutzer aktiv</span>
+        </div>
+        <a href="mailto:support@wearsync.app" className={styles.footerLink}>
+          <span>✉️</span> Kontakt
+        </a>
+        <button className={styles.footerLink} onClick={() => setShowDisclaimer(true)}>
+          <span>ℹ️</span> Hinweise
         </button>
-        {!collapsed && <span className={styles.version}>v1.2.0</span>}
+        <div className={styles.version}>v1.5.0</div>
       </div>
-    </nav>
+
+      {showDisclaimer && (
+        <div className={styles.modal} onClick={() => setShowDisclaimer(false)}>
+          <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
+            <h2>⚕️ Gesundheitshinweis</h2>
+            <p>WearSync dient ausschließlich der Visualisierung und Aufbereitung von Gesundheitsdaten aus verschiedenen Quellen.</p>
+            <p>Der Vitality Age und alle anderen berechneten Werte stellen lediglich Schätzungen dar und ersetzen keine medizinische Diagnose oder Beratung.</p>
+            <p>Bei gesundheitlichen Fragen oder Beschwerden konsultieren Sie bitte immer einen Arzt oder qualifiziertes medizinisches Fachpersonal.</p>
+            <p className={styles.disclaimerSmall}>Diese Anwendung ist nicht als Medizinprodukt zugelassen.</p>
+            <button className={styles.closeBtn} onClick={() => setShowDisclaimer(false)}>Verstanden</button>
+          </div>
+        </div>
+      )}
+    </aside>
   );
 }

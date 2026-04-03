@@ -1,0 +1,24 @@
+.container { padding: 1.5rem; max-width: 1000px; margin: 0 auto; }
+.container h1 { margin: 0 0 1.5rem; }
+.statsRow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+.statBox { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 1rem; text-align: center; }
+.statVal { display: block; font-size: 1.5rem; font-weight: 700; color: #4ade80; }
+.statLabel { font-size: 0.75rem; color: #888; }
+.filters { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem; }
+.filterGroup { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.filterGroup span { color: #888; font-size: 0.85rem; min-width: 70px; }
+.filterGroup button { background: rgba(255,255,255,0.05); border: none; color: #888; padding: 0.4rem 0.8rem; border-radius: 16px; font-size: 0.8rem; cursor: pointer; }
+.filterGroup button.active { background: #4ade80; color: #000; }
+.list { display: flex; flex-direction: column; gap: 0.5rem; }
+.workoutCard { display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); border-radius: 12px; padding: 1rem; text-decoration: none; color: inherit; transition: background 0.2s; }
+.workoutCard:hover { background: rgba(255,255,255,0.06); }
+.workoutIcon { font-size: 1.5rem; }
+.workoutMain { flex: 1; }
+.workoutTitle { font-weight: 600; margin-bottom: 0.25rem; text-transform: capitalize; }
+.workoutMeta { font-size: 0.8rem; color: #888; }
+.workoutStats { display: flex; gap: 0.75rem; font-size: 0.85rem; color: #888; }
+.loadMore { display: block; width: 100%; margin-top: 1rem; padding: 0.75rem; background: rgba(255,255,255,0.1); border: none; color: #fff; border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
+.loadMore:hover { background: rgba(255,255,255,0.15); }
+.loadMore:disabled { opacity: 0.5; cursor: default; }
+.empty { text-align: center; padding: 3rem; color: #888; }
+@media (max-width: 600px) { .statsRow { grid-template-columns: repeat(2, 1fr); } }

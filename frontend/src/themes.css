@@ -1,0 +1,64 @@
+/* WearSync Pro (Default) */
+:root,
+[data-theme="wearsync-pro"] {
+  --bg-primary: #0d0d0d;
+  --bg-secondary: #1a1a1a;
+  --bg-card: rgba(255,255,255,0.03);
+  --bg-card-hover: rgba(255,255,255,0.08);
+  --accent: #4ade80;
+  --accent-secondary: #22c55e;
+  --text-primary: #ffffff;
+  --text-secondary: #888888;
+  --text-muted: #666666;
+  --border: #222222;
+  --ring-steps: #4ade80;
+  --ring-calories: #f97316;
+  --ring-sleep: #a855f7;
+  --ring-heart: #ef4444;
+  --vitality-gradient: linear-gradient(135deg, #4ade80, #22c55e);
+}
+
+/* Apple Health Style */
+[data-theme="apple-health"] {
+  --bg-primary: #f2f2f7;
+  --bg-secondary: #ffffff;
+  --bg-card: rgba(0,0,0,0.03);
+  --bg-card-hover: rgba(0,0,0,0.06);
+  --accent: #ff2d55;
+  --accent-secondary: #ff375f;
+  --text-primary: #1c1c1e;
+  --text-secondary: #8e8e93;
+  --text-muted: #aeaeb2;
+  --border: #d1d1d6;
+  --ring-steps: #a8ff3e;
+  --ring-calories: #ff2d55;
+  --ring-sleep: #5e5ce6;
+  --ring-heart: #ff2d55;
+  --vitality-gradient: linear-gradient(135deg, #ff2d55, #ff6b6b);
+}
+
+/* Athlytic / Bevel Style */
+[data-theme="athlytic"] {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #1a1a2e;
+  --bg-card: rgba(0,212,255,0.05);
+  --bg-card-hover: rgba(0,212,255,0.1);
+  --accent: #00d4ff;
+  --accent-secondary: #00a8cc;
+  --text-primary: #ffffff;
+  --text-secondary: #7a8599;
+  --text-muted: #4a5568;
+  --border: #2d3748;
+  --ring-steps: #00d4ff;
+  --ring-calories: #ff6b2c;
+  --ring-sleep: #a855f7;
+  --ring-heart: #ff4757;
+  --vitality-gradient: linear-gradient(135deg, #00d4ff, #0099ff, #a855f7);
+}
+
+/* Global Styles mit CSS-Variablen */
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background 0.3s, color 0.3s;
+}

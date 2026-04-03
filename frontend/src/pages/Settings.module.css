@@ -1,0 +1,34 @@
+.container { padding: 1.5rem; max-width: 800px; margin: 0 auto; }
+.container h1 { margin: 0 0 2rem; }
+.section { background: rgba(255,255,255,0.03); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; }
+.section h2 { margin: 0 0 1rem; font-size: 1.1rem; color: #4ade80; }
+
+.langButtons { display: flex; gap: 1rem; }
+.langBtn { background: rgba(255,255,255,0.05); border: 2px solid #333; color: #fff; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: all 0.2s; }
+.langBtn:hover { border-color: #555; }
+.langBtn.active { border-color: #4ade80; background: rgba(74,222,128,0.1); }
+
+.themeBtn { background: rgba(255,255,255,0.1); border: 1px solid #333; color: #fff; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; }
+.themeBtn:hover { background: rgba(255,255,255,0.15); }
+
+.formGroup { margin-bottom: 1rem; }
+.formGroup label { display: block; font-size: 0.85rem; color: #888; margin-bottom: 0.5rem; }
+.formGroup input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid #333; border-radius: 8px; padding: 0.75rem; color: #fff; }
+.formGroup input:focus { outline: none; border-color: #4ade80; }
+
+.saveBtn { background: #4ade80; color: #000; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; }
+.actionBtn { display: inline-block; background: rgba(255,255,255,0.1); color: #fff; text-decoration: none; padding: 0.75rem 1rem; border-radius: 8px; }
+
+.dataInfo { color: #888; font-size: 0.9rem; margin-bottom: 1rem; }
+.dataInfo p { margin: 0.5rem 0; }
+
+.about { color: #888; font-size: 0.9rem; }
+.about a { color: #4ade80; }
+.disclaimer { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #333; font-size: 0.8rem; color: #666; }
+
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modalContent { background: #1a1a1a; border: 1px solid #333; border-radius: 16px; padding: 2rem; text-align: center; max-width: 400px; }
+.modalIcon { font-size: 3rem; }
+.modalContent h2 { margin: 1rem 0 0.5rem; }
+.modalContent p { color: #888; }
+.closeBtn { margin-top: 1rem; background: #4ade80; color: #000; border: none; padding: 0.75rem 2rem; border-radius: 8px; cursor: pointer; }

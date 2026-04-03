@@ -1,238 +1,40 @@
-.container {
-  padding: 1rem 1.5rem 3rem;
-  max-width: 1100px;
-  margin: 0 auto;
-  min-height: 100vh;
-}
-
-/* Date Navigation */
-.dateNav {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  position: relative;
-}
-
-.navBtn {
-  background: rgba(255,255,255,0.08);
-  border: none;
-  color: #fff;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 1.4rem;
-  transition: all 0.2s;
-}
-
-.navBtn:hover:not(:disabled) { background: rgba(255,255,255,0.15); }
-.navBtn:disabled { opacity: 0.3; cursor: not-allowed; }
-
-.dateBtn {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: #fff;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.calendarPopup {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  margin-top: 0.5rem;
-}
-
-.calendarPopup :global(.react-datepicker) { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; }
-.calendarPopup :global(.react-datepicker__header) { background: #222; border-bottom: 1px solid #333; }
-.calendarPopup :global(.react-datepicker__current-month),
-.calendarPopup :global(.react-datepicker__day-name),
-.calendarPopup :global(.react-datepicker__day) { color: #fff; }
-.calendarPopup :global(.react-datepicker__day:hover) { background: #4ade80; color: #000; }
-.calendarPopup :global(.react-datepicker__day--selected) { background: #4ade80; color: #000; }
-
-/* Loading & Empty */
-.loading { display: flex; justify-content: center; padding: 5rem; }
-.spinner { width: 40px; height: 40px; border: 3px solid #222; border-top-color: #4ade80; border-radius: 50%; animation: spin 0.8s linear infinite; }
+.container { padding: 1.5rem; max-width: 1200px; margin: 0 auto; }
+.loading { display: flex; justify-content: center; padding: 3rem; }
+.spinner { width: 40px; height: 40px; border: 3px solid #333; border-top-color: #4ade80; border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.empty { text-align: center; color: #666; padding: 4rem 1rem; font-size: 1rem; line-height: 1.8; }
-.empty a { color: #4ade80; }
 
-/* Hero Section */
-.hero {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 2rem;
-}
+.dateNav { display: flex; justify-content: center; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.navBtn { background: rgba(255,255,255,0.1); border: none; color: #fff; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: background 0.2s; }
+.navBtn:hover:not(:disabled) { background: rgba(255,255,255,0.2); }
+.navBtn:disabled { opacity: 0.3; cursor: default; }
+.datePicker { background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 0.5rem 1rem; border-radius: 20px; text-align: center; cursor: pointer; font-size: 0.95rem; }
 
-/* Metrics Grid - Responsive */
-.metricsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-}
+.metricsGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.metricCard { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1rem; }
+.metricHeader { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+.metricIcon { font-size: 1rem; }
+.metricLabel { font-size: 0.7rem; color: #888; letter-spacing: 0.05em; }
+.metricValue { font-size: 1.75rem; font-weight: 600; }
+.metricUnit { font-size: 0.8rem; color: #888; margin-left: 0.25rem; }
 
-.metricCard {
-  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 16px;
-  padding: 1rem;
-  transition: all 0.25s ease;
-}
+.chartsRow { display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; }
+@media (max-width: 900px) { .chartsRow { grid-template-columns: 1fr; } }
 
-.metricCard:hover {
-  transform: translateY(-3px);
-  border-color: rgba(255,255,255,0.15);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-}
+.trendsCard { background: rgba(255,255,255,0.03); border-radius: 16px; padding: 1.25rem; }
+.trendsHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+.trendsHeader h3 { margin: 0; font-size: 1rem; }
+.chartTabs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.chartTabs button { background: rgba(255,255,255,0.05); border: none; color: #888; padding: 0.35rem 0.7rem; border-radius: 14px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
+.chartTabs button:hover { background: rgba(255,255,255,0.1); }
+.chartTabs button.active { background: #4ade80; color: #000; }
 
-.metricHeader {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.metricIcon { font-size: 1.1rem; }
-.metricLabel { font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
-
-.metricValue {
-  font-size: 1.6rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
-.metricUnit {
-  font-size: 0.75rem;
-  color: #666;
-  margin-left: 3px;
-  font-weight: 400;
-}
-
-/* Bottom Grid */
-.bottomGrid {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: 1rem;
-}
-
-/* Chart Section */
-.chartSection {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 20px;
-  padding: 1.25rem;
-}
-
-.chartSection h3 { color: #fff; margin: 0 0 1rem; font-size: 1rem; font-weight: 600; }
-
-.chartHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.chartTabs { display: flex; gap: 0.35rem; flex-wrap: wrap; }
-
-.chartTab {
-  background: rgba(255,255,255,0.06);
-  border: none;
-  color: #888;
-  padding: 0.4rem 0.75rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.75rem;
-  transition: all 0.2s;
-}
-
-.chartTab:hover { color: #fff; background: rgba(255,255,255,0.1); }
-.chartTab.active { background: var(--color); color: #000; font-weight: 600; }
-
-/* Averages Section */
-.avgSection {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 20px;
-  padding: 1.25rem;
-}
-
-.avgSection h3 { color: #fff; margin: 0 0 1rem; font-size: 1rem; font-weight: 600; }
-
-.avgGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.avgItem {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
+.avgSection { background: rgba(255,255,255,0.03); border-radius: 16px; padding: 1.25rem; }
+.avgSection h3 { margin: 0 0 1rem; font-size: 1rem; }
+.avgGrid { display: flex; flex-direction: column; gap: 0.75rem; }
+.avgItem { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
 .avgItem:last-child { border-bottom: none; }
-
-.avgLabel { color: #888; font-size: 0.8rem; }
-
-.avgRow {
-  display: flex;
-  align-items: baseline;
-  gap: 0.25rem;
-}
-
-.avgVal { color: #4ade80; font-size: 1rem; font-weight: 600; font-variant-numeric: tabular-nums; }
-.avgPeriod { color: #555; font-size: 0.65rem; }
-
-/* Coffee Button */
-.coffeeBtn {
-  position: fixed;
-  bottom: 1.25rem;
-  right: 1.25rem;
-  background: linear-gradient(135deg, #ff813f 0%, #ffdd00 100%);
-  color: #000;
-  padding: 0.6rem 1.1rem;
-  border-radius: 25px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.85rem;
-  box-shadow: 0 4px 15px rgba(255,129,63,0.4);
-  transition: all 0.3s;
-  z-index: 100;
-}
-
-.coffeeBtn:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 6px 20px rgba(255,129,63,0.5);
-}
-
-/* Responsive */
-@media (max-width: 800px) {
-  .bottomGrid { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 600px) {
-  .container { padding: 0.75rem 1rem 3rem; }
-  .metricsGrid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
-  .metricCard { padding: 0.85rem; }
-  .metricValue { font-size: 1.4rem; }
-  .coffeeBtn { bottom: 1rem; right: 1rem; padding: 0.5rem 0.9rem; font-size: 0.8rem; }
-}
-
-@media (max-width: 400px) {
-  .metricsGrid { grid-template-columns: repeat(2, 1fr); }
-  .avgItem { grid-template-columns: 1fr; gap: 0.25rem; }
-  .avgRow { justify-content: flex-start; }
-}
+.avgLabel { color: #888; font-size: 0.85rem; }
+.avgRow { display: flex; align-items: baseline; gap: 0.25rem; margin-left: 0.75rem; }
+.avgVal { color: #4ade80; font-weight: 600; font-size: 0.95rem; }
+.avgPeriod { color: #666; font-size: 0.7rem; }
+.metricSub { font-size: 0.7rem; color: #666; margin-top: 0.25rem; }

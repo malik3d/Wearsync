@@ -18,6 +18,7 @@ const TYPE_MAP = {
   HKQuantityTypeIdentifierBodyFatPercentage: 'body_fat',
   HKQuantityTypeIdentifierLeanBodyMass: 'lean_mass',
   HKQuantityTypeIdentifierBodyMassIndex: 'bmi',
+  HKQuantityTypeIdentifierVO2Max: 'vo2_max',
   HKQuantityTypeIdentifierHeight: 'height',
   HKQuantityTypeIdentifierWaistCircumference: 'waist',
 };
@@ -50,7 +51,7 @@ function parseAppleHealthXML(xmlPath) {
     function ensure(date) {
       if (!daily[date]) daily[date] = {
         hr_values: [], hrv_values: [], spo2_values: [], resting_hr_values: [],
-        weight_values: [], body_fat_values: [], lean_mass_values: [], bmi_values: [],
+        weight_values: [], body_fat_values: [], lean_mass_values: [], bmi_values: [], vo2_max_values: [],
         steps: 0, calories_active: 0, calories_basal: 0, distance_m: 0, active_min: 0,
         sleep: { deep: 0, rem: 0, light: 0, awake: 0, in_bed: 0, asleep: 0 },
       };
@@ -83,6 +84,7 @@ function parseAppleHealthXML(xmlPath) {
       else if (field === 'body_fat') { if (!isNaN(val)) d.body_fat_values.push(val * 100); }
       else if (field === 'lean_mass') { if (!isNaN(val)) d.lean_mass_values.push(val); }
       else if (field === 'bmi') { if (!isNaN(val)) d.bmi_values.push(val); }
+      else if (field === 'vo2_max') { if (!isNaN(val)) d.vo2_max_values.push(val); }
       else if (field === 'sleep') {
         const sleepType = SLEEP_VALUES[attrs.value] || 'asleep';
         const start = new Date(attrs.startDate);
@@ -129,6 +131,7 @@ function parseAppleHealthXML(xmlPath) {
           fat_ratio: d.body_fat_values.length ? +avg(d.body_fat_values).toFixed(1) : null,
           lean_mass_kg: d.lean_mass_values.length ? +avg(d.lean_mass_values).toFixed(2) : null,
           bmi: d.bmi_values.length ? +avg(d.bmi_values).toFixed(1) : null,
+          vo2_max: d.vo2_max_values.length ? +avg(d.vo2_max_values).toFixed(1) : null,
           stress_avg: null,
           raw: JSON.stringify({ source: 'apple_health_xml' }),
         });

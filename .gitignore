@@ -5,3 +5,8 @@ data/
 *.log
 package-lock.json
 backup/
+backend/tmp/
+backend/data/*.db
+*.xml
+*.gpx
+node_modules/

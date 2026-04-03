@@ -37,6 +37,8 @@ app.use('/api/export',  requireAuth, exportRoutes);
 app.use('/api/sync',    requireAuth, syncRoutes);
 app.use('/api/import',  requireAuth, importRoutes);
 app.use('/api/profiles', require('./routes/profiles'));
+app.use('/api/workouts', require('./routes/workouts'));
+app.use('/api/events', require('./routes/events'));
 
 const { serveStatic } = require('./static');
 serveStatic(app);

@@ -6,7 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'change_this_to_a_random_secret_str
 // Rate limiters
 const defaultLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 1000,
   message: { error: 'Too many requests, please try again later.' }
 });
 

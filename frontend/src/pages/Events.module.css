@@ -1,0 +1,30 @@
+.container { padding: 1.5rem; max-width: 900px; margin: 0 auto; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.header h1 { margin: 0; }
+.addBtn { background: #4ade80; color: #000; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; }
+.section { margin-bottom: 2rem; }
+.section h2 { font-size: 1rem; color: #888; margin-bottom: 1rem; }
+.eventList { display: flex; flex-direction: column; gap: 0.75rem; }
+.eventCard { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid; }
+.eventCard.past { opacity: 0.6; }
+.eventMain { flex: 1; }
+.eventType { font-size: 0.75rem; color: #888; margin-bottom: 0.25rem; }
+.eventTitle { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.35rem; }
+.eventMeta { display: flex; gap: 1rem; font-size: 0.8rem; color: #888; flex-wrap: wrap; }
+.eventRight { display: flex; align-items: center; gap: 1rem; }
+.countdown { text-align: center; }
+.countdownNum { font-size: 2rem; font-weight: 700; display: block; line-height: 1; }
+.countdownLabel { font-size: 0.7rem; color: #888; }
+.eventActions { display: flex; gap: 0.5rem; }
+.eventActions button { background: rgba(255,255,255,0.1); border: none; padding: 0.4rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
+.empty { text-align: center; padding: 3rem; color: #888; }
+.empty span { font-size: 3rem; display: block; margin-bottom: 1rem; }
+.empty button { margin-top: 1rem; background: #4ade80; color: #000; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; }
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.form { background: #1a1a1a; border-radius: 16px; padding: 1.5rem; width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 0.75rem; }
+.form h2 { margin: 0 0 0.5rem; }
+.form input, .form select { background: rgba(255,255,255,0.05); border: 1px solid #333; border-radius: 8px; padding: 0.75rem; color: #fff; font-size: 1rem; }
+.formActions { display: flex; gap: 0.75rem; margin-top: 0.5rem; }
+.formActions button { flex: 1; padding: 0.75rem; border-radius: 8px; cursor: pointer; border: none; }
+.formActions button:first-child { background: rgba(255,255,255,0.1); color: #fff; }
+.formActions button.primary { background: #4ade80; color: #000; font-weight: 600; }

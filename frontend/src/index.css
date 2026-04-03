@@ -1,53 +1,149 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
 
-:root {
-  --bg:         #0a0a0f;
-  --bg2:        #111118;
-  --bg3:        #18181f;
-  --border:     rgba(255,255,255,0.07);
-  --text:       #e8e8f0;
-  --text-dim:   #6b6b80;
-  --text-mid:   #a0a0b8;
+/* ===== THEMES ===== */
 
-  --garmin:     #00c8c8;
-  --whoop:      #ff3860;
-  --fitbit:     #00b0b9;
-  --withings:   #7c5cbf;
-  --zepp:       #ff7c2a;
-
-  --green:      #00e87a;
-  --yellow:     #ffd166;
-  --red:        #ff3860;
-  --blue:       #3d9eff;
-
-  --radius:     12px;
-  --radius-lg:  20px;
-  --mono:       'Space Mono', monospace;
-  --sans:       'DM Sans', sans-serif;
+/* WearSync Pro (Default) */
+:root,
+[data-theme="wearsync-pro"] {
+  --bg: #0a0a0f;
+  --bg2: #111118;
+  --bg3: #18181f;
+  --bg-card: rgba(255,255,255,0.03);
+  --bg-card-hover: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.07);
+  --text: #e8e8f0;
+  --text-dim: #6b6b80;
+  --text-mid: #a0a0b8;
+  --accent: #4ade80;
+  --accent-dim: #22c55e;
+  --green: #00e87a;
+  --yellow: #ffd166;
+  --red: #ff3860;
+  --ring-steps: #4ade80;
+  --ring-calories: #f97316;
+  --ring-sleep: #a855f7;
+  --ring-heart: #ef4444;
+  --vitality-glow: rgba(74, 222, 128, 0.3);
+  --garmin: #00c8c8;
+  --whoop: #ff3860;
+  --fitbit: #00b0b9;
+  --withings: #7c5cbf;
+  --zepp: #ff7c2a;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* Apple Health Style */
+[data-theme="apple-health"] {
+  --bg: #f2f2f7;
+  --bg2: #ffffff;
+  --bg3: #e5e5ea;
+  --bg-card: rgba(0,0,0,0.04);
+  --bg-card-hover: rgba(0,0,0,0.08);
+  --border: #d1d1d6;
+  --text: #1c1c1e;
+  --text-dim: #8e8e93;
+  --text-mid: #636366;
+  --accent: #ff2d55;
+  --accent-dim: #ff375f;
+  --green: #34c759;
+  --yellow: #ffcc00;
+  --red: #ff3b30;
+  --ring-steps: #a8ff3e;
+  --ring-calories: #ff2d55;
+  --ring-sleep: #5e5ce6;
+  --ring-heart: #ff2d55;
+  --vitality-glow: rgba(255, 45, 85, 0.3);
+  --garmin: #00c8c8;
+  --whoop: #ff3860;
+  --fitbit: #00b0b9;
+  --withings: #7c5cbf;
+  --zepp: #ff7c2a;
+}
+
+/* Athlytic / Bevel Style */
+[data-theme="athlytic"] {
+  --bg: #0a0a0f;
+  --bg2: #12121a;
+  --bg3: #1a1a2e;
+  --bg-card: rgba(0,212,255,0.05);
+  --bg-card-hover: rgba(0,212,255,0.12);
+  --border: #2d3748;
+  --text: #ffffff;
+  --text-dim: #7a8599;
+  --text-mid: #a0aec0;
+  --accent: #00d4ff;
+  --accent-dim: #00a8cc;
+  --green: #00d4ff;
+  --yellow: #ffd166;
+  --red: #ff4757;
+  --ring-steps: #00d4ff;
+  --ring-calories: #ff6b2c;
+  --ring-sleep: #a855f7;
+  --ring-heart: #ff4757;
+  --vitality-glow: rgba(0, 212, 255, 0.4);
+  --garmin: #00c8c8;
+  --whoop: #ff3860;
+  --fitbit: #00b0b9;
+  --withings: #7c5cbf;
+  --zepp: #ff7c2a;
+}
+
+/* ===== BASE STYLES ===== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 html, body, #root {
   height: 100%;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
   background: var(--bg);
   color: var(--text);
-  font-family: var(--sans);
-  font-size: 14px;
+  line-height: 1.5;
+  transition: background 0.3s ease, color 0.3s ease;
   -webkit-font-smoothing: antialiased;
 }
 
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-button {
-  font-family: var(--sans);
-  cursor: pointer;
-  border: none;
-  outline: none;
+a {
+  color: var(--accent);
+  text-decoration: none;
 }
 
-a { color: inherit; text-decoration: none; }
+button {
+  font-family: inherit;
+}
 
-.mono { font-family: var(--mono); }
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
+}
+
+/* Layout */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-content {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--bg);
+}
