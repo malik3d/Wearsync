@@ -28,3 +28,4 @@
 .formActions button { flex: 1; padding: 0.75rem; border-radius: 8px; cursor: pointer; border: none; }
 .formActions button:first-child { background: rgba(255,255,255,0.1); color: #fff; }
 .formActions button.primary { background: #4ade80; color: #000; font-weight: 600; }
+.form textarea { background: rgba(255,255,255,0.05); border: 1px solid #333; border-radius: 8px; padding: 0.75rem; color: #fff; font-size: 1rem; resize: vertical; }

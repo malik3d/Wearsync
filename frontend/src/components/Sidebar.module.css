@@ -153,3 +153,35 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
 }
+
+.countdown {
+  background: linear-gradient(135deg, rgba(74,222,128,0.15), rgba(74,222,128,0.05));
+  border: 1px solid rgba(74,222,128,0.3);
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 0 1rem 1rem;
+  text-align: center;
+}
+
+.countdownDays {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #4ade80;
+  line-height: 1;
+}
+
+.countdownLabel {
+  font-size: 0.7rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.countdownEvent {
+  font-size: 0.85rem;
+  color: #fff;
+  margin-top: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

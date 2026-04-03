@@ -24,18 +24,16 @@ router.get('/', (req, res) => {
   
   const whereClause = where.length ? 'WHERE ' + where.join(' AND ') : '';
   
-  // Get workouts
   const workouts = db.prepare(`
-    SELECT id, device, date, start_time, end_time, workout_type as type, name,
+    SELECT id, device, date, start_time, end_time, workout_type as type,
            duration_s, distance_m, calories, hr_avg, hr_max, elevation_m, 
-           CASE WHEN route_gpx IS NOT NULL THEN 1 ELSE 0 END as route_gpx
+           CASE WHEN route_gpx IS NOT NULL THEN 1 ELSE 0 END as has_route
     FROM workouts 
     ${whereClause}
     ORDER BY date DESC, start_time DESC
     LIMIT ? OFFSET ?
   `).all(...args, limit, offset);
   
-  // Get stats
   const stats = db.prepare(`
     SELECT COUNT(*) as total, 
            SUM(duration_s) as total_duration,

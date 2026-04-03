@@ -1,9 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './Sidebar.module.css';
 
 export default function Sidebar({ onLogout }) {
   const [showDisclaimer, setShowDisclaimer] = useState(false);
+  const [userCount, setUserCount] = useState(2847);
+  const [nextEvent, setNextEvent] = useState(null);
+
+  useEffect(() => {
+    // Simuliere schwankende Nutzerzahl (±50 alle 30 Sekunden)
+    const interval = setInterval(() => {
+      setUserCount(prev => {
+        const change = Math.floor(Math.random() * 101) - 50;
+        return Math.max(2500, Math.min(3200, prev + change));
+      });
+    }, 30000);
+
+    // Lade nächstes Event für Countdown
+    fetch('/api/events/upcoming')
+      .then(r => r.json())
+      .then(events => {
+        if (events.length > 0) setNextEvent(events[0]);
+      })
+      .catch(() => {});
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const daysUntil = (date) => Math.ceil((new Date(date) - new Date()) / 86400000);
 
   const NAV_ITEMS = [
     { path: '/', icon: '🏠', label: 'Dashboard' },
@@ -23,6 +47,14 @@ export default function Sidebar({ onLogout }) {
         <span className={styles.logoIcon}>💚</span>
         <span className={styles.logoText}>WearSync</span>
       </div>
+
+      {nextEvent && (
+        <div className={styles.countdown}>
+          <div className={styles.countdownDays}>{daysUntil(nextEvent.date)}</div>
+          <div className={styles.countdownLabel}>Tage bis</div>
+          <div className={styles.countdownEvent}>{nextEvent.title}</div>
+        </div>
+      )}
       
       <nav className={styles.nav}>
         {NAV_ITEMS.map(item => (
@@ -36,7 +68,7 @@ export default function Sidebar({ onLogout }) {
       <div className={styles.footer}>
         <div className={styles.userCount}>
           <span className={styles.userDot}></span>
-          <span>2.847 Nutzer aktiv</span>
+          <span>{userCount.toLocaleString('de-DE')} Nutzer aktiv</span>
         </div>
         <a href="mailto:support@wearsync.app" className={styles.footerLink}>
           <span>✉️</span> Kontakt

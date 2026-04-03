@@ -63,7 +63,7 @@ export default function Workouts() {
   const fmtDistance = (m, workoutType) => {
     if (!m) return '';
     // Schwimmen in Metern anzeigen
-    if (workoutType === 'swimming') {
+    if (workoutType?.toLowerCase() === 'swimming') {
       return `${Math.round(m)} m`;
     }
     return `${(m / 1000).toFixed(1)} km`;
