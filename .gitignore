@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .env
+.env.*
 data/
 *.log
 package-lock.json
@@ -9,4 +10,15 @@ backend/tmp/
 backend/data/*.db
 *.xml
 *.gpx
-node_modules/
+
+# Private keys and credentials
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+
+# OS
+.DS_Store
+Thumbs.db
